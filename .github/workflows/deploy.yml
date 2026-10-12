@@ -86,6 +86,19 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      # deploy-pages also succeeds when Pages is set to "Deploy from a branch", but GitHub then
+      # runs its own Jekyll build on every push to main, which fails on the Astro sources.
+      # Only the repository settings can change this, so the step warns and never fails.
+      - name: Check Pages source
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          build_type=$(gh api "repos/${GITHUB_REPOSITORY}/pages" --jq '.build_type') || build_type=unknown
+          echo "Pages build type: ${build_type}"
+          if [ "${build_type}" = "legacy" ]; then
+            echo "::warning title=GitHub Pages source::Pages is set to \"Deploy from a branch\". Change Settings → Pages → Build and deployment → Source to \"GitHub Actions\" (README, section 8)."
+          fi
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
