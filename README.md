@@ -34,8 +34,8 @@ The repository files are ready. These settings can only be changed in GitHub's w
    **GitHub Actions***. Do not choose "Deploy from a branch": GitHub would then also run its
    own Jekyll build on the source files, and that build fails on this project (see section 8).
    If GitHub then suggests workflow templates (Static HTML, Jekyll, …), skip them:
-   `.github/workflows/deploy.yml` is already the workflow, and a second one would publish over
-   it.
+   `.github/workflows/deploy.yml` is already the workflow. A second one would compete with it
+   (the Static HTML template, for example, would publish the unbuilt source files).
 4. **Run the deployment:** *Actions → "Deploy to GitHub Pages" → Run workflow → Branch:
    `main`*. Every later push to `main` deploys automatically.
 5. **Verify:** when the run finishes (green tick), the deploy job shows the URL. Open
@@ -172,7 +172,7 @@ public/og-default.png      default social-sharing image
 | Problem | Cause / fix |
 |---|---|
 | Workflow fails at **Configure GitHub Pages** ("Get Pages site failed") | Pages is not enabled. Do step 1.3 (Source: GitHub Actions). |
-| A second workflow, **pages build and deployment**, fails at *Build with Jekyll* ("Invalid YAML front matter in …/src/pages/404.astro") | Pages is set to "Deploy from a branch", so GitHub tries to build the source files with Jekyll. Set *Settings → Pages → Source* to **GitHub Actions** (step 1.3), then re-run "Deploy to GitHub Pages". Don't add a `.nojekyll` or `_config.yml` file to work around it: the branch build would then succeed and publish the unbuilt source files in place of the site. "Deploy to GitHub Pages" shows a warning while this setting is wrong. |
+| A second workflow, **pages build and deployment**, fails at *Build with Jekyll* ("Invalid YAML front matter in …/src/pages/404.astro") | Pages is set to "Deploy from a branch", so GitHub tries to build the source files with Jekyll. Set *Settings → Pages → Source* to **GitHub Actions** (step 1.3), then re-run "Deploy to GitHub Pages". Don't add a `.nojekyll` file (or a `_config.yml` that excludes `src/`) to work around it: the branch build would then succeed and publish the unbuilt source files in place of the site. "Deploy to GitHub Pages" shows a warning while this setting is wrong. |
 | Deploy job: "Branch … is not allowed to deploy to github-pages" | The `github-pages` environment only allows the default branch. Make `main` the default branch (step 1.1), or edit *Settings → Environments → github-pages → Deployment branches*. |
 | Build fails after editing a JSON file | Open the failed run in **Actions**. The log names the file and field (e.g. missing `"en"` text, a trailing comma, an unknown category). |
 | Site loads without styles or images | The base path is wrong. Make sure the deployment ran through the workflow, not "Deploy from a branch". |
