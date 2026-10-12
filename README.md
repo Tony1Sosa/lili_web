@@ -25,11 +25,11 @@ coating and metalworking. It replaces the WordPress site at railing-inox.com. Th
 
 The repository files are ready. These settings can only be changed in GitHub's web interface:
 
-1. **Create the `main` branch.** The work is on `claude/gallant-heisenberg-lknalc`. On the
-   repository page open the branch selector, type `main` and choose
-   **Create branch: main from claude/gallant-heisenberg-lknalc**. Alternatively, merge a pull
-   request into `main`.
-2. **Make `main` the default branch:** *Settings → General → Default branch → `main`*.
+1. **Check the default branch:** *Settings → General → Default branch* should be `main`
+   (the site was pushed to `main`; the first branch pushed to an empty repository becomes
+   the default).
+2. **Pull requests (optional):** for future changes, work on a branch and open a pull request
+   into `main`. The workflow then builds and checks the change without publishing it.
 3. **Enable Pages through Actions:** *Settings → Pages → Build and deployment → Source:
    **GitHub Actions***.
 4. **Run the deployment:** *Actions → "Deploy to GitHub Pages" → Run workflow → Branch:
@@ -166,7 +166,7 @@ public/og-default.png      default social-sharing image
 | Problem | Cause / fix |
 |---|---|
 | Workflow fails at **Configure GitHub Pages** ("Get Pages site failed") | Pages is not enabled. Do step 1.3 (Source: GitHub Actions). |
-| Deploy job: "Branch … is not allowed to deploy to github-pages" | The `github-pages` environment only allows the default branch. Make `main` the default branch (step 1.2), or edit *Settings → Environments → github-pages → Deployment branches*. |
+| Deploy job: "Branch … is not allowed to deploy to github-pages" | The `github-pages` environment only allows the default branch. Make `main` the default branch (step 1.1), or edit *Settings → Environments → github-pages → Deployment branches*. |
 | Build fails after editing a JSON file | Open the failed run in **Actions**. The log names the file and field (e.g. missing `"en"` text, a trailing comma, an unknown category). |
 | Site loads without styles or images | The base path is wrong. Make sure the deployment ran through the workflow, not "Deploy from a branch". |
 | Form shows "not active yet" | `FORM_ENDPOINT` is not set, or doesn't start with `https://`. Set it and re-run the deployment. |
