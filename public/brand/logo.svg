@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40" role="img" aria-label="Logo placeholder">
+  <!-- PLACEHOLDER LOGO. Replace this file with the company logo (keep the name logo.svg or update src/data/company.ts). -->
+  <rect width="40" height="40" rx="4" fill="#202326"/>
+  <path d="M8 13h24M11 13v16M29 13v16M11 18h18M11 22h18M11 26h18M8 29h24" fill="none" stroke="#E87532" stroke-width="2.2" stroke-linecap="round"/>
+</svg>

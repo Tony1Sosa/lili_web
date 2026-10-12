@@ -1,0 +1,128 @@
+---
+/**
+ * Contact details from src/data/company.ts. Unconfirmed values (null) render as
+ * visibly marked placeholders and are never turned into tel:/mailto: links.
+ */
+import type { Lang } from '../i18n/ui';
+import { useTranslations } from '../i18n/utils';
+import { company, telHref } from '../data/company';
+import Icon from './Icon.astro';
+
+interface Props {
+  lang: Lang;
+  showHours?: boolean;
+  class?: string;
+}
+
+const { lang, showHours = true, class: className } = Astro.props;
+const t = useTranslations(lang);
+const c = company.contact;
+---
+
+<ul class:list={['contact-list', className]}>
+  <li>
+    <Icon name="phone" class="contact-list__icon" />
+    <span>
+      <span class="contact-list__label">{t('contact.phone')}</span>
+      {c.phone ? <a href={telHref(c.phone)}>{c.phone}</a> : <span class="placeholder-value">{t('ph.phone')}</span>}
+      {c.mobile && (
+        <>
+          <br />
+          <a href={telHref(c.mobile)}>{c.mobile}</a>
+        </>
+      )}
+    </span>
+  </li>
+  <li>
+    <Icon name="mail" class="contact-list__icon" />
+    <span>
+      <span class="contact-list__label">{t('contact.email')}</span>
+      {c.email ? <a href={`mailto:${c.email}`}>{c.email}</a> : <span class="placeholder-value">{t('ph.email')}</span>}
+    </span>
+  </li>
+  <li>
+    <Icon name="map-pin" class="contact-list__icon" />
+    <span>
+      <span class="contact-list__label">{c.address ? t('contact.address') : t('contact.base')}</span>
+      {
+        c.address ? (
+          <address>{c.address[lang]}</address>
+        ) : (
+          <span>
+            {c.city[lang]} · <span class="placeholder-value">{t('ph.address')}</span>
+          </span>
+        )
+      }
+      {
+        c.mapUrl && (
+          <>
+            <br />
+            <a href={c.mapUrl} rel="noopener" target="_blank">
+              {t('contact.map')}
+            </a>
+          </>
+        )
+      }
+    </span>
+  </li>
+  {
+    showHours && (
+      <li>
+        <Icon name="clock" class="contact-list__icon" />
+        <span>
+          <span class="contact-list__label">{t('contact.hours')}</span>
+          {c.hours[lang]}
+        </span>
+      </li>
+    )
+  }
+</ul>
+
+<style>
+  .contact-list {
+    display: grid;
+    gap: var(--space-4);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .contact-list li {
+    display: grid;
+    grid-template-columns: 1.5rem minmax(0, 1fr);
+    gap: var(--space-3);
+    align-items: start;
+  }
+
+  .contact-list :global(.contact-list__icon) {
+    width: 1.375rem;
+    height: 1.375rem;
+    margin-top: 0.15rem;
+    color: var(--c-accent-ink);
+  }
+
+  :global(.on-dark) .contact-list :global(.contact-list__icon),
+  :global(.section--dark) .contact-list :global(.contact-list__icon) {
+    color: var(--c-accent);
+  }
+
+  .contact-list__label {
+    display: block;
+    font-family: var(--f-mono);
+    font-size: var(--fs-xs);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--c-muted);
+  }
+
+  :global(.on-dark) .contact-list__label,
+  :global(.section--dark) .contact-list__label {
+    color: var(--c-steel);
+  }
+
+  .contact-list a {
+    color: inherit;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+</style>

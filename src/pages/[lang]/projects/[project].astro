@@ -1,0 +1,344 @@
+---
+import { Picture, getImage } from 'astro:assets';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHeader from '../../../components/PageHeader.astro';
+import ProjectCard from '../../../components/ProjectCard.astro';
+import ProjectMedia from '../../../components/ProjectMedia.astro';
+import Lightbox from '../../../components/Lightbox.astro';
+import CtaBand from '../../../components/CtaBand.astro';
+import Icon from '../../../components/Icon.astro';
+import { LANGS, type Lang } from '../../../i18n/ui';
+import { localePath, photoCount, useTranslations } from '../../../i18n/utils';
+import { url } from '../../../lib/url';
+import { categoryLabel, getProjects, getServices, relatedProjects, type Project } from '../../../lib/content';
+import { breadcrumbJsonLd } from '../../../lib/seo';
+
+export async function getStaticPaths() {
+  const projects = await getProjects();
+  return LANGS.flatMap((lang) =>
+    projects.map((project) => ({ params: { lang, project: project.id }, props: { project, all: projects } })),
+  );
+}
+
+interface Props {
+  project: Project;
+  all: Project[];
+}
+
+const { project, all } = Astro.props;
+const lang = Astro.params.lang as Lang;
+const t = useTranslations(lang);
+const d = project.data;
+const title = d.title[lang];
+const cat = categoryLabel(d.category, lang);
+const services = (await getServices()).filter((s) => d.services.some((ref) => ref.id === s.id));
+const related = relatedProjects(project, all, 3);
+const primaryService = d.services[0]?.id;
+const quoteQuery = `service=${primaryService}&project=${project.id}`;
+const backHref = url(localePath(lang, 'projects')) + `?category=${d.category}`;
+
+// Large versions for the lightbox (and the no-JavaScript fallback link).
+const photos = await Promise.all(
+  project.photos.map(async (photo) => ({
+    ...photo,
+    large: await getImage({ src: photo.image, width: Math.min(photo.image.width, 2000), format: 'webp', quality: 82 }),
+  })),
+);
+
+const ogImage = project.cover
+  ? (await getImage({ src: project.cover.image, width: 1200, height: 630, fit: 'cover', format: 'jpg' })).src
+  : undefined;
+
+const parents = [{ label: t('nav.projects'), href: localePath(lang, 'projects') }];
+const jsonLd = [breadcrumbJsonLd(lang, parents, { label: title, href: localePath(lang, `projects/${project.id}`) }, Astro.site)];
+const description = d.description?.[lang] ?? d.summary[lang];
+---
+
+<BaseLayout
+  lang={lang}
+  title={title}
+  description={description.length > 160 ? description.slice(0, 157).trimEnd() + '…' : description}
+  image={ogImage}
+  imageAlt={project.cover?.alt[lang]}
+  jsonLd={jsonLd}
+>
+  <PageHeader lang={lang} title={title} eyebrow={cat} lead={d.summary[lang]} crumbs={parents} />
+
+  <section class="section">
+    <div class="container project-layout">
+      <div class="project-main">
+        {
+          photos.length > 0 ? (
+            <section aria-labelledby="gallery-title">
+              <h2 id="gallery-title" class="visually-hidden">
+                {t('projects.gallery')}
+              </h2>
+              <ul class="photo-grid" data-lightbox-group>
+                {photos.map((photo, i) => (
+                  <li class:list={{ 'photo-grid__lead': i === 0 }}>
+                    <a
+                      href={photo.large.src}
+                      data-lightbox-item
+                      data-alt={photo.alt[lang]}
+                      aria-label={t('projects.open', { i: i + 1, n: photos.length })}
+                    >
+                      <Picture
+                        src={photo.image}
+                        alt={photo.alt[lang]}
+                        widths={i === 0 ? [640, 960, 1280, 1600] : [400, 640, 960]}
+                        sizes={i === 0 ? '(min-width: 64em) 50rem, 100vw' : '(min-width: 64em) 25rem, 50vw'}
+                        formats={['avif', 'webp']}
+                        loading={i === 0 ? 'eager' : 'lazy'}
+                        decoding="async"
+                      />
+                      <span class="photo-grid__zoom" aria-hidden="true">
+                        <Icon name="expand" size={18} />
+                      </span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ) : (
+            <div class="pending">
+              <ProjectMedia project={project} lang={lang} loading="eager" />
+              <p class="pending__note">
+                <Icon name="camera" size={20} />
+                <span>{t('projects.photosPendingNote')}</span>
+              </p>
+            </div>
+          )
+        }
+
+        {
+          d.description && (
+            <div class="prose project-text">
+              <p>{d.description[lang]}</p>
+            </div>
+          )
+        }
+      </div>
+
+      <aside class="project-aside">
+        <dl class="facts">
+          <div>
+            <dt>{t('projects.category')}</dt>
+            <dd><a href={backHref}>{cat}</a></dd>
+          </div>
+          {
+            services.length > 0 && (
+              <div>
+                <dt>{t('projects.service')}</dt>
+                <dd>
+                  {services.map((s, i) => (
+                    <>
+                      {i > 0 && ', '}
+                      <a href={url(localePath(lang, `products/${s.id}`))}>{s.data.title[lang]}</a>
+                    </>
+                  ))}
+                </dd>
+              </div>
+            )
+          }
+          {
+            d.materials && d.materials[lang].length > 0 && (
+              <div>
+                <dt>{t('projects.materials')}</dt>
+                <dd>{d.materials[lang].join(', ')}</dd>
+              </div>
+            )
+          }
+          <div>
+            <dt>{t('projects.gallery')}</dt>
+            <dd>{photos.length ? photoCount(lang, photos.length) : t('projects.photosPending')}</dd>
+          </div>
+        </dl>
+        <a class="btn similar-cta" href={url(localePath(lang, 'contact')) + `?${quoteQuery}#quote`}>
+          {t('cta.similar')}
+          <Icon name="arrow-right" />
+        </a>
+        <a class="link-arrow back-link" href={backHref}>
+          <Icon name="arrow-left" />
+          {t('projects.backTo', { cat })}
+        </a>
+      </aside>
+    </div>
+  </section>
+
+  {
+    related.length > 0 && (
+      <section class="section section--white section--line" aria-labelledby="related-title">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <h2 id="related-title">{t('projects.related')}</h2>
+            </div>
+            <a class="link-arrow" href={url(localePath(lang, 'projects'))}>
+              {t('cta.allProjects')}
+              <Icon name="arrow-right" />
+            </a>
+          </div>
+          <div class="grid grid--3">
+            {related.map((p) => (
+              <ProjectCard project={p} lang={lang} />
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <CtaBand lang={lang} query={quoteQuery} ctaLabel={t('cta.similar')} />
+
+  {photos.length > 0 && <Lightbox lang={lang} />}
+</BaseLayout>
+
+<style>
+  .project-layout {
+    display: grid;
+    gap: var(--space-7);
+    align-items: start;
+  }
+
+  @media (min-width: 64em) {
+    .project-layout {
+      grid-template-columns: minmax(0, 1fr) 20rem;
+      gap: var(--space-8);
+    }
+  }
+
+  .photo-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-3);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (min-width: 48em) {
+    .photo-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .photo-grid__lead {
+    grid-column: 1 / -1;
+  }
+
+  .photo-grid a {
+    position: relative;
+    display: block;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border-radius: var(--radius);
+    background: var(--c-line);
+  }
+
+  .photo-grid__lead a {
+    aspect-ratio: 16 / 10;
+  }
+
+  .photo-grid :global(picture) {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .photo-grid :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s var(--ease);
+  }
+
+  .photo-grid a:hover :global(img) {
+    transform: scale(1.03);
+  }
+
+  .photo-grid__zoom {
+    position: absolute;
+    right: var(--space-3);
+    bottom: var(--space-3);
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 999px;
+    background: rgb(32 35 38 / 0.8);
+    color: var(--c-paper);
+  }
+
+  .pending {
+    border: 1px solid var(--c-line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--c-white);
+  }
+
+  .pending__note {
+    display: flex;
+    gap: var(--space-3);
+    margin: 0;
+    padding: var(--space-4) var(--space-5);
+    font-size: var(--fs-sm);
+    color: var(--c-muted);
+  }
+
+  .pending__note :global(svg) {
+    flex: none;
+    color: var(--c-accent-ink);
+  }
+
+  .project-text {
+    margin-top: var(--space-6);
+    font-size: var(--fs-lg);
+  }
+
+  .project-aside {
+    display: grid;
+    gap: var(--space-5);
+  }
+
+  @media (min-width: 64em) {
+    .project-aside {
+      position: sticky;
+      top: calc(var(--header-h) + var(--space-5));
+    }
+  }
+
+  .facts {
+    margin: 0;
+    border-top: 3px solid var(--c-ink);
+  }
+
+  .facts > div {
+    padding: var(--space-3) 0;
+    border-bottom: 1px solid var(--c-line);
+  }
+
+  .facts dt {
+    font-family: var(--f-mono);
+    font-size: var(--fs-xs);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--c-muted);
+  }
+
+  .facts dd {
+    margin: var(--space-1) 0 0;
+    font-weight: 600;
+  }
+
+  .similar-cta {
+    width: 100%;
+  }
+
+  .back-link :global(svg) {
+    transition: transform 0.2s var(--ease);
+  }
+
+  .back-link:hover :global(svg) {
+    transform: translateX(-3px);
+  }
+</style>

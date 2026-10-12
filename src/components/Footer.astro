@@ -1,0 +1,195 @@
+---
+import type { Lang } from '../i18n/ui';
+import { localePath, useTranslations } from '../i18n/utils';
+import { url } from '../lib/url';
+import { company } from '../data/company';
+import { getServices } from '../lib/content';
+import ContactDetails from './ContactDetails.astro';
+import LanguageSwitcher from './LanguageSwitcher.astro';
+
+interface Props {
+  lang: Lang;
+  path: string;
+}
+
+const { lang, path } = Astro.props;
+const t = useTranslations(lang);
+const services = await getServices();
+const year = new Date().getFullYear();
+const c = company.contact;
+const hasPlaceholders = !c.phone || !c.email || !c.address;
+
+const partOf = t('footer.partOf', { brand: company.metalworkBrand, legal: company.legalName[lang] });
+
+const nav = [
+  { href: localePath(lang), label: t('nav.home') },
+  { href: localePath(lang, 'products'), label: t('nav.products') },
+  { href: localePath(lang, 'projects'), label: t('nav.projects') },
+  { href: localePath(lang, 'manufacturing'), label: t('nav.manufacturing') },
+  { href: localePath(lang, 'about'), label: t('nav.about') },
+  { href: localePath(lang, 'contact'), label: t('nav.contact') },
+];
+
+const social = [
+  { href: company.social.facebook, label: 'Facebook' },
+  { href: company.social.instagram, label: 'Instagram' },
+].filter((s): s is { href: string; label: string } => Boolean(s.href));
+---
+
+<footer class="site-footer on-dark">
+  <div class="container site-footer__grid">
+    <div class="site-footer__brand">
+      <p class="site-footer__name">{company.brand[lang]}</p>
+      <p class="site-footer__sub mono">{company.metalworkBrand}</p>
+      <p>{t('footer.tagline')}</p>
+      <p class="site-footer__muted">{partOf}</p>
+      {
+        social.length > 0 && (
+          <ul class="site-footer__social">
+            {social.map((s) => (
+              <li>
+                <a href={s.href} rel="noopener" target="_blank">
+                  {s.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </div>
+
+    <nav class="site-footer__col" aria-labelledby="footer-nav-title">
+      <h2 class="site-footer__title" id="footer-nav-title">{t('footer.navigation')}</h2>
+      <ul>
+        {nav.map((item) => <li><a href={url(item.href)}>{item.label}</a></li>)}
+      </ul>
+    </nav>
+
+    <nav class="site-footer__col" aria-labelledby="footer-services-title">
+      <h2 class="site-footer__title" id="footer-services-title">{t('footer.services')}</h2>
+      <ul>
+        {
+          services.map((s) => (
+            <li>
+              <a href={url(localePath(lang, `products/${s.id}`))}>{s.data.title[lang]}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="site-footer__col">
+      <h2 class="site-footer__title">{t('footer.contact')}</h2>
+      <ContactDetails lang={lang} />
+    </div>
+  </div>
+
+  <div class="container site-footer__bottom">
+    <p>© {year} {company.legalName[lang]}. {t('footer.rights')}</p>
+    <a href={url(localePath(lang, 'privacy'))}>{t('nav.privacy')}</a>
+    <LanguageSwitcher lang={lang} path={path} variant="footer" />
+  </div>
+  {
+    hasPlaceholders && (
+      <p class="container site-footer__preview mono">
+        <span class="placeholder-value">{t('footer.preview')}</span>
+      </p>
+    )
+  }
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--c-ink);
+    color: var(--c-paper);
+    padding-top: var(--space-8);
+    font-size: var(--fs-sm);
+  }
+
+  .site-footer__grid {
+    display: grid;
+    gap: var(--space-7) var(--space-6);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+    padding-bottom: var(--space-7);
+  }
+
+  @media (min-width: 64em) {
+    .site-footer__grid {
+      grid-template-columns: 1.4fr 0.8fr 1.1fr 1.2fr;
+    }
+  }
+
+  .site-footer__name {
+    margin: 0;
+    font-size: var(--fs-lg);
+    font-weight: 800;
+  }
+
+  .site-footer__sub {
+    margin: 0 0 var(--space-4);
+    font-size: var(--fs-xs);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--c-accent);
+  }
+
+  .site-footer__muted {
+    color: var(--c-steel);
+  }
+
+  .site-footer__title {
+    margin-bottom: var(--space-4);
+    font-family: var(--f-mono);
+    font-size: var(--fs-xs);
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--c-steel);
+  }
+
+  .site-footer__col ul,
+  .site-footer__social {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .site-footer__col li + li {
+    margin-top: var(--space-2);
+  }
+
+  .site-footer a {
+    color: var(--c-paper);
+    text-decoration-color: rgb(166 173 179 / 0.5);
+  }
+
+  .site-footer a:hover {
+    color: var(--c-accent);
+  }
+
+  .site-footer__social {
+    display: flex;
+    gap: var(--space-4);
+  }
+
+  .site-footer__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3) var(--space-5);
+    padding-block: var(--space-5);
+    border-top: 1px solid var(--c-ink-3);
+    color: var(--c-steel);
+  }
+
+  .site-footer__bottom p {
+    margin: 0 auto 0 0;
+  }
+
+  .site-footer__preview {
+    margin: 0;
+    padding-bottom: var(--space-5);
+    font-size: var(--fs-xs);
+    color: var(--c-steel);
+  }
+</style>

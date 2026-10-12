@@ -1,0 +1,21 @@
+{
+  "status": "published",
+  "order": 10,
+  "featured": true,
+  "category": "railings",
+  "services": ["railings"],
+  "title": { "bg": "Парапети от инокс", "en": "Stainless steel railings" },
+  "summary": {
+    "bg": "Подбрани изпълнени парапети от неръждаема стомана.",
+    "en": "A selection of completed stainless steel railings."
+  },
+  "description": {
+    "bg": "Парапети от неръждаема стомана (инокс) за стълбища, тераси и балкони. Освен класически модели изработваме и варианти с дървен ръкохват или с хоризонтални инокс въжета.",
+    "en": "Stainless steel (inox) railings for staircases, terraces and balconies. Besides classic models, we also make versions with wooden handrails or horizontal stainless steel cables."
+  },
+  "materials": { "bg": ["Неръждаема стомана (инокс)"], "en": ["Stainless steel (inox)"] },
+  "legacy": {
+    "urls": ["/portfolio/метални-конструкции/"],
+    "images": ["2019/01/IMG_0191-3.jpg"]
+  }
+}

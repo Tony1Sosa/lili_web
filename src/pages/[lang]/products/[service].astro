@@ -1,0 +1,276 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHeader from '../../../components/PageHeader.astro';
+import ProjectCard from '../../../components/ProjectCard.astro';
+import ContactDetails from '../../../components/ContactDetails.astro';
+import CtaBand from '../../../components/CtaBand.astro';
+import Icon from '../../../components/Icon.astro';
+import { LANGS, type Lang } from '../../../i18n/ui';
+import { localePath, useTranslations } from '../../../i18n/utils';
+import { url } from '../../../lib/url';
+import { getProjects, getServices, projectsForService, type Service } from '../../../lib/content';
+import { breadcrumbJsonLd } from '../../../lib/seo';
+
+export async function getStaticPaths() {
+  const services = await getServices();
+  return LANGS.flatMap((lang) => services.map((service) => ({ params: { lang, service: service.id }, props: { service } })));
+}
+
+interface Props {
+  service: Service;
+}
+
+const { service } = Astro.props;
+const lang = Astro.params.lang as Lang;
+const t = useTranslations(lang);
+const d = service.data;
+const allServices = await getServices();
+const projects = projectsForService(service.id, await getProjects());
+const others = allServices.filter((s) => s.id !== service.id);
+const quoteHref = url(localePath(lang, 'contact')) + `?service=${service.id}#quote`;
+
+const parents = [{ label: t('nav.products'), href: localePath(lang, 'products') }];
+const self = { label: d.title[lang], href: localePath(lang, `products/${service.id}`) };
+const jsonLd = [breadcrumbJsonLd(lang, parents, self, Astro.site)];
+---
+
+<BaseLayout lang={lang} title={d.title[lang]} description={d.seoDescription[lang]} jsonLd={jsonLd}>
+  <PageHeader lang={lang} title={d.title[lang]} eyebrow={t('nav.products')} lead={d.intro[lang]} crumbs={parents}>
+    <div class="btn-row header-cta">
+      <a class="btn" href={quoteHref}>{t('cta.quote')}<Icon name="arrow-right" /></a>
+      {
+        projects.length > 0 && (
+          <a class="btn btn--ghost" href="#related">
+            {t('services.related')}
+          </a>
+        )
+      }
+    </div>
+  </PageHeader>
+
+  <section class="section">
+    <div class="container service-layout">
+      <div class="service-main">
+        <h2>{t('services.includes')}</h2>
+        <ul class="checklist">
+          {d.includes[lang].map((item) => <li>{item}</li>)}
+        </ul>
+
+        {
+          d.applications && (
+            <>
+              <h2>{t('services.applications')}</h2>
+              <ul class="checklist">
+                {d.applications[lang].map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
+            </>
+          )
+        }
+
+        {
+          d.materials && (
+            <>
+              <h2>{t('services.materials')}</h2>
+              <ul class="tags">
+                {d.materials[lang].map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
+            </>
+          )
+        }
+
+        {
+          d.note && (
+            <p class="note">
+              <Icon name="alert" size={20} />
+              <span>{d.note[lang]}</span>
+            </p>
+          )
+        }
+      </div>
+
+      <aside class="quote-box" aria-labelledby="quote-box-title">
+        <h2 id="quote-box-title">{t('services.quoteTitle')}</h2>
+        <p>{t('services.quoteText')}</p>
+        <a class="btn" href={quoteHref}>{t('cta.quote')}<Icon name="arrow-right" /></a>
+        <hr />
+        <ContactDetails lang={lang} />
+      </aside>
+    </div>
+  </section>
+
+  {
+    projects.length > 0 && (
+      <section class="section section--white section--line" id="related" aria-labelledby="related-title">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <h2 id="related-title">{t('services.related')}</h2>
+            </div>
+            <a class="link-arrow" href={url(localePath(lang, 'projects'))}>
+              {t('cta.allProjects')}
+              <Icon name="arrow-right" />
+            </a>
+          </div>
+          <div class="grid grid--3">
+            {projects.map((p) => (
+              <ProjectCard project={p} lang={lang} />
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <section class="section section--tight section--line" aria-labelledby="others-title">
+    <div class="container">
+      <h2 id="others-title" class="others-title">{t('services.other')}</h2>
+      <ul class="others">
+        {
+          others.map((s) => (
+            <li>
+              <a href={url(localePath(lang, `products/${s.id}`))}>
+                <Icon name={s.data.icon} size={20} />
+                {s.data.title[lang]}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <CtaBand lang={lang} query={`service=${service.id}`} />
+</BaseLayout>
+
+<style>
+  .header-cta {
+    margin-top: var(--space-6);
+  }
+
+  .service-layout {
+    display: grid;
+    gap: var(--space-7);
+    align-items: start;
+  }
+
+  @media (min-width: 64em) {
+    .service-layout {
+      grid-template-columns: minmax(0, 1fr) 22rem;
+      gap: var(--space-8);
+    }
+  }
+
+  .service-main h2 {
+    font-size: var(--fs-h3);
+    margin-top: var(--space-7);
+  }
+
+  .service-main h2:first-child {
+    margin-top: 0;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .tags li {
+    padding: 0.4rem 0.75rem;
+    border: 1px solid var(--c-line-2);
+    border-radius: 2px;
+    background: var(--c-white);
+    font-size: var(--fs-sm);
+  }
+
+  .note {
+    display: flex;
+    gap: var(--space-3);
+    margin-top: var(--space-7);
+    padding: var(--space-4);
+    border-left: 3px solid var(--c-accent);
+    background: var(--c-white);
+    font-size: var(--fs-sm);
+    color: var(--c-muted);
+  }
+
+  .note :global(svg) {
+    flex: none;
+    color: var(--c-accent-ink);
+  }
+
+  .quote-box {
+    padding: var(--space-6);
+    background: var(--c-white);
+    border: 1px solid var(--c-line);
+    border-top: 3px solid var(--c-accent);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-1);
+  }
+
+  @media (min-width: 64em) {
+    .quote-box {
+      position: sticky;
+      top: calc(var(--header-h) + var(--space-5));
+    }
+  }
+
+  .quote-box h2 {
+    font-size: var(--fs-h4);
+  }
+
+  .quote-box p {
+    color: var(--c-muted);
+    font-size: var(--fs-sm);
+  }
+
+  .quote-box .btn {
+    width: 100%;
+  }
+
+  .quote-box hr {
+    margin: var(--space-6) 0;
+    border: 0;
+    border-top: 1px solid var(--c-line);
+  }
+
+  .others-title {
+    font-size: var(--fs-h4);
+  }
+
+  .others {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr));
+    gap: var(--space-2) var(--space-5);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .others a {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    min-height: 2.75rem;
+    color: var(--c-ink);
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 1px solid var(--c-line);
+  }
+
+  .others a:hover {
+    color: var(--c-accent-ink);
+  }
+
+  .others :global(svg) {
+    flex: none;
+    color: var(--c-accent-ink);
+  }
+</style>

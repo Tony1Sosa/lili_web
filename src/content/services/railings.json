@@ -1,0 +1,43 @@
+{
+  "order": 1,
+  "icon": "railing",
+  "title": { "bg": "Парапети", "en": "Railings & balustrades" },
+  "summary": {
+    "bg": "Парапети от инокс, инокс и стъкло, черен метал и алуминий — по каталог или по индивидуален проект.",
+    "en": "Stainless steel, glass, black-steel and aluminium railings — from our catalogue or made to your design."
+  },
+  "intro": {
+    "bg": "Парапетите са основната ни специалност. Изработваме и монтираме парапети за стълбища, тераси и балкони — както стандартни модели по каталог, така и индивидуални решения по ваш проект. Работим с неръждаема стомана (инокс), черен метал, алуминий и стъкло.",
+    "en": "Railings are our core speciality. We fabricate and install railings for staircases, terraces and balconies — both standard catalogue models and bespoke designs to your drawings. We work with stainless steel (inox), black steel, aluminium and glass."
+  },
+  "includes": {
+    "bg": [
+      "Парапети от инокс — включително модели с дървен ръкохват или с хоризонтални инокс въжета",
+      "Парапети от инокс и стъкло",
+      "Парапети от черен метал — боядисани; за външен монтаж препоръчваме горещо поцинковане",
+      "Парапети от алуминий",
+      "Изработка по каталог или по индивидуален проект",
+      "Монтаж на обекта"
+    ],
+    "en": [
+      "Stainless steel railings — including models with wooden handrails or horizontal stainless steel cables",
+      "Stainless steel and glass railings",
+      "Black-steel railings — painted; for outdoor installation we recommend hot-dip galvanising",
+      "Aluminium railings",
+      "Catalogue models or bespoke designs",
+      "Installation on site"
+    ]
+  },
+  "applications": {
+    "bg": ["Вътрешни и външни стълбища", "Тераси и балкони", "Жилищни, търговски и обществени сгради"],
+    "en": ["Interior and exterior staircases", "Terraces and balconies", "Residential, commercial and public buildings"]
+  },
+  "materials": {
+    "bg": ["Неръждаема стомана (инокс)", "Стъкло", "Черен метал с боя или прахово покритие по RAL", "Алуминий", "Дърво за ръкохвати"],
+    "en": ["Stainless steel (inox)", "Glass", "Black steel, painted or powder-coated in RAL colours", "Aluminium", "Timber handrails"]
+  },
+  "seoDescription": {
+    "bg": "Изработка и монтаж на парапети от инокс, стъкло, черен метал и алуминий — по каталог или по индивидуален проект. Производство в София.",
+    "en": "Fabrication and installation of stainless steel, glass, black-steel and aluminium railings — catalogue or bespoke. Workshop in Sofia, Bulgaria."
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "status": "published",
+  "order": 80,
+  "featured": false,
+  "category": "canopies",
+  "services": ["canopies"],
+  "title": { "bg": "Стъклени козирки", "en": "Glass canopies" },
+  "summary": {
+    "bg": "Подбрани изпълнени стъклени козирки.",
+    "en": "A selection of completed glass canopies."
+  },
+  "materials": { "bg": ["Стъкло", "Метална носеща конструкция"], "en": ["Glass", "Metal supporting structure"] },
+  "legacy": {
+    "urls": ["/portfolio/стъклени-козирки/"],
+    "images": ["2019/01/gs_19-2.jpg"]
+  }
+}

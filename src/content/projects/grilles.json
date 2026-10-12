@@ -1,0 +1,16 @@
+{
+  "status": "published",
+  "order": 110,
+  "featured": false,
+  "category": "doors-fencing",
+  "services": ["gates-fences-grilles"],
+  "title": { "bg": "Решетки", "en": "Grilles" },
+  "summary": {
+    "bg": "Метални решетки за прозорци и врати.",
+    "en": "Metal grilles for windows and doors."
+  },
+  "legacy": {
+    "urls": ["/portfolio/решетки/"],
+    "images": ["2019/01/b_5-1.jpg"]
+  }
+}

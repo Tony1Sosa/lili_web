@@ -1,0 +1,209 @@
+---
+/**
+ * Accessible photo viewer built on the native <dialog> element.
+ * Any link with [data-lightbox-item] inside [data-lightbox-group] opens in it.
+ * Without JavaScript the links simply open the full-size image.
+ */
+import type { Lang } from '../i18n/ui';
+import { useTranslations } from '../i18n/utils';
+import Icon from './Icon.astro';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<dialog class="lightbox" aria-label={t('lightbox.label')} data-lightbox data-counter={t('lightbox.counter', { i: '{i}', n: '{n}' })}>
+  <div class="lightbox__inner">
+    <div class="lightbox__bar">
+      <p class="lightbox__counter mono" data-lightbox-counter aria-live="polite"></p>
+      <button type="button" class="lightbox__btn" data-lightbox-close>
+        <Icon name="close" label={t('lightbox.close')} />
+      </button>
+    </div>
+    <figure class="lightbox__figure">
+      <img data-lightbox-img alt="" decoding="async" />
+      <figcaption data-lightbox-caption></figcaption>
+    </figure>
+    <button type="button" class="lightbox__btn lightbox__nav lightbox__nav--prev" data-lightbox-prev>
+      <Icon name="chevron-left" label={t('lightbox.prev')} />
+    </button>
+    <button type="button" class="lightbox__btn lightbox__nav lightbox__nav--next" data-lightbox-next>
+      <Icon name="chevron-right" label={t('lightbox.next')} />
+    </button>
+  </div>
+</dialog>
+
+<style>
+  .lightbox {
+    width: 100vw;
+    max-width: 100vw;
+    height: 100dvh;
+    max-height: 100dvh;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: rgb(20 22 24 / 0.97);
+    color: var(--c-paper);
+  }
+
+  .lightbox::backdrop {
+    background: rgb(20 22 24 / 0.9);
+  }
+
+  .lightbox__inner {
+    position: relative;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    height: 100%;
+  }
+
+  .lightbox__bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-3) var(--gutter);
+  }
+
+  .lightbox__counter {
+    margin: 0;
+    font-size: var(--fs-xs);
+    color: var(--c-steel);
+  }
+
+  .lightbox__figure {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto;
+    gap: var(--space-3);
+    margin: 0;
+    padding: 0 var(--gutter) var(--space-5);
+    min-height: 0;
+  }
+
+  .lightbox__figure img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    min-height: 0;
+  }
+
+  .lightbox__figure figcaption {
+    text-align: center;
+    font-size: var(--fs-sm);
+    color: var(--c-steel);
+  }
+
+  .lightbox__btn {
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border: 1px solid var(--c-ink-3);
+    border-radius: 999px;
+    background: rgb(32 35 38 / 0.85);
+    color: var(--c-paper);
+    cursor: pointer;
+  }
+
+  .lightbox__btn:hover {
+    background: var(--c-paper);
+    color: var(--c-ink);
+  }
+
+  .lightbox__nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .lightbox__nav--prev {
+    left: var(--space-3);
+  }
+
+  .lightbox__nav--next {
+    right: var(--space-3);
+  }
+
+  .lightbox__nav[hidden] {
+    display: none;
+  }
+</style>
+
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>('[data-lightbox]');
+  const groups = document.querySelectorAll<HTMLElement>('[data-lightbox-group]');
+
+  if (dialog && typeof dialog.showModal === 'function' && groups.length) {
+    const img = dialog.querySelector<HTMLImageElement>('[data-lightbox-img]')!;
+    const caption = dialog.querySelector<HTMLElement>('[data-lightbox-caption]')!;
+    const counter = dialog.querySelector<HTMLElement>('[data-lightbox-counter]')!;
+    const prev = dialog.querySelector<HTMLButtonElement>('[data-lightbox-prev]')!;
+    const next = dialog.querySelector<HTMLButtonElement>('[data-lightbox-next]')!;
+    const close = dialog.querySelector<HTMLButtonElement>('[data-lightbox-close]')!;
+    const template = dialog.dataset.counter ?? '{i} / {n}';
+
+    let items: HTMLAnchorElement[] = [];
+    let index = 0;
+    let opener: HTMLElement | null = null;
+
+    const show = (i: number) => {
+      index = (i + items.length) % items.length;
+      const link = items[index];
+      img.src = link.href;
+      img.alt = link.dataset.alt ?? '';
+      caption.textContent = link.dataset.alt ?? '';
+      counter.textContent = template.replace('{i}', String(index + 1)).replace('{n}', String(items.length));
+      prev.hidden = next.hidden = items.length < 2;
+      // Preload the neighbours for snappy navigation.
+      [index + 1, index - 1].forEach((n) => {
+        const neighbour = items[(n + items.length) % items.length];
+        if (neighbour) new Image().src = neighbour.href;
+      });
+    };
+
+    groups.forEach((group) => {
+      const links = Array.from(group.querySelectorAll<HTMLAnchorElement>('[data-lightbox-item]'));
+      links.forEach((link, i) =>
+        link.addEventListener('click', (event) => {
+          event.preventDefault();
+          items = links;
+          opener = link;
+          show(i);
+          dialog.showModal();
+          close.focus();
+        }),
+      );
+    });
+
+    prev.addEventListener('click', () => show(index - 1));
+    next.addEventListener('click', () => show(index + 1));
+    close.addEventListener('click', () => dialog.close());
+    dialog.addEventListener('close', () => {
+      img.removeAttribute('src');
+      opener?.focus();
+    });
+    dialog.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft') show(index - 1);
+      if (event.key === 'ArrowRight') show(index + 1);
+    });
+    // Click on the dark area outside the image closes the viewer.
+    dialog.addEventListener('click', (event) => {
+      if (event.target === dialog || (event.target as HTMLElement).classList.contains('lightbox__figure')) dialog.close();
+    });
+
+    // Basic swipe support on touch screens.
+    let startX = 0;
+    dialog.addEventListener('touchstart', (e) => (startX = e.changedTouches[0].clientX), { passive: true });
+    dialog.addEventListener(
+      'touchend',
+      (e) => {
+        const dx = e.changedTouches[0].clientX - startX;
+        if (Math.abs(dx) > 50) show(index + (dx < 0 ? 1 : -1));
+      },
+      { passive: true },
+    );
+  }
+</script>

@@ -1,0 +1,21 @@
+{
+  "status": "published",
+  "order": 90,
+  "featured": false,
+  "category": "doors-fencing",
+  "services": ["fire-doors"],
+  "title": { "bg": "Метални пожароустойчиви врати", "en": "Metal fire-resistant doors" },
+  "summary": {
+    "bg": "Врати от стоманена ламарина с пълнеж от минерална вата.",
+    "en": "Sheet-steel doors with mineral wool infill."
+  },
+  "description": {
+    "bg": "Вратите са изработени от стоманена ламарина с пълнеж от минерална вата. Те са негорими, димоплътни и самозатварящи се.",
+    "en": "The doors are made of sheet steel with a mineral wool infill. They are non-combustible, smoke-tight and self-closing."
+  },
+  "materials": { "bg": ["Стоманена ламарина", "Минерална вата"], "en": ["Sheet steel", "Mineral wool"] },
+  "legacy": {
+    "urls": ["/portfolio/метални-пожароустойчиви-врати/", "/portfolio/metal-fire-resistant-doors/?lang=en"],
+    "images": ["2019/01/mfd_2-1.jpg"]
+  }
+}

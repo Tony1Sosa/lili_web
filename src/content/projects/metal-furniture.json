@@ -1,0 +1,16 @@
+{
+  "status": "published",
+  "order": 120,
+  "featured": false,
+  "category": "custom",
+  "services": ["custom-fabrication"],
+  "title": { "bg": "Метални мебели", "en": "Metal furniture" },
+  "summary": {
+    "bg": "Нестандартни метални изделия — мебели.",
+    "en": "Custom metal products — furniture."
+  },
+  "legacy": {
+    "urls": ["/portfolio/мебели/"],
+    "images": ["2020/03/4441-2.jpg"]
+  }
+}

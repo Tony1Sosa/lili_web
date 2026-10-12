@@ -1,0 +1,17 @@
+{
+  "status": "published",
+  "order": 40,
+  "featured": false,
+  "category": "railings",
+  "services": ["railings"],
+  "title": { "bg": "Парапети от алуминий", "en": "Aluminium railings" },
+  "summary": {
+    "bg": "Подбрани изпълнени парапети от алуминий.",
+    "en": "A selection of completed aluminium railings."
+  },
+  "materials": { "bg": ["Алуминий"], "en": ["Aluminium"] },
+  "legacy": {
+    "urls": ["/portfolio/railings-from-aluminum/?lang=en"],
+    "images": []
+  }
+}

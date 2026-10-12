@@ -1,0 +1,24 @@
+{
+  "status": "published",
+  "order": 70,
+  "featured": true,
+  "category": "canopies",
+  "services": ["canopies"],
+  "title": { "bg": "Козирки от поликарбонат", "en": "Polycarbonate canopies" },
+  "summary": {
+    "bg": "Козирки от поликарбонат с рамка от инокс или черен метал.",
+    "en": "Polycarbonate canopies on stainless steel or black-steel frames."
+  },
+  "description": {
+    "bg": "Носещата рамка е от неръждаема стомана или черен метал — тръби, квадратни профили или ферми. Поликарбонатът може да бъде прозрачен, цветен или матов, в различни дебелини, кухокамерен или плътен.",
+    "en": "The supporting frame is stainless steel or black steel — tubes, square profiles or trusses. The polycarbonate can be clear, tinted or matt, in various thicknesses, multiwall or solid."
+  },
+  "materials": {
+    "bg": ["Неръждаема стомана или черен метал", "Поликарбонат"],
+    "en": ["Stainless steel or black steel", "Polycarbonate"]
+  },
+  "legacy": {
+    "urls": ["/portfolio/козирки-от-поликарбонат/", "/portfolio/polycarbonate-visors/?lang=en"],
+    "images": ["2019/01/1-4.jpg"]
+  }
+}

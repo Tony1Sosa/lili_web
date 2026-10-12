@@ -1,0 +1,16 @@
+{
+  "status": "published",
+  "order": 130,
+  "featured": true,
+  "category": "custom",
+  "services": ["custom-fabrication", "metalworking"],
+  "title": { "bg": "Прикачен инвентар за тежка механизация", "en": "Attachments for heavy machinery" },
+  "summary": {
+    "bg": "Производство на прикачен инвентар за строителна и тежка техника.",
+    "en": "Manufacturing of attachments for construction and heavy machinery."
+  },
+  "legacy": {
+    "urls": ["/portfolio/прикачен-инвентар-за-тежка-механизац/", "/portfolio/attachments-for-heavy-machinery/?lang=en"],
+    "images": ["2020/04/телескоп-31-2.jpg"]
+  }
+}

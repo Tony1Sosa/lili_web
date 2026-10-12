@@ -1,0 +1,72 @@
+---
+import type { Lang } from '../i18n/ui';
+import { localePath, useTranslations } from '../i18n/utils';
+import { url } from '../lib/url';
+import { company, telHref } from '../data/company';
+import Icon from './Icon.astro';
+
+interface Props {
+  lang: Lang;
+  title?: string;
+  text?: string;
+  /** Query string appended to the contact link, e.g. "service=railings". */
+  query?: string;
+  ctaLabel?: string;
+}
+
+const { lang, title, text, query, ctaLabel } = Astro.props;
+const t = useTranslations(lang);
+const contactHref = url(localePath(lang, 'contact')) + (query ? `?${query}` : '') + '#quote';
+const phone = company.contact.phone;
+---
+
+<section class="cta-band blueprint on-dark">
+  <div class="container cta-band__inner">
+    <div>
+      <h2>{title ?? t('services.quoteTitle')}</h2>
+      <p class="lead">{text ?? t('services.quoteText')}</p>
+    </div>
+    <div class="btn-row">
+      <a class="btn" href={contactHref}>
+        {ctaLabel ?? t('cta.quote')}
+        <Icon name="arrow-right" />
+      </a>
+      {
+        phone && (
+          <a class="btn btn--ghost" href={telHref(phone)}>
+            <Icon name="phone" />
+            {phone}
+          </a>
+        )
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta-band {
+    color: var(--c-paper);
+    padding-block: var(--section-y);
+    border-top: 4px solid var(--c-accent);
+  }
+
+  .cta-band__inner {
+    display: grid;
+    gap: var(--space-6);
+    align-items: end;
+  }
+
+  @media (min-width: 56em) {
+    .cta-band__inner {
+      grid-template-columns: minmax(0, 1.6fr) auto;
+    }
+  }
+
+  .cta-band h2 {
+    max-width: 20ch;
+  }
+
+  .cta-band .lead {
+    margin: 0;
+  }
+</style>

@@ -1,0 +1,68 @@
+---
+/**
+ * GitHub Pages serves this file for every unknown URL, in both languages.
+ * All links are absolute (with the base path), so they work from any depth.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import { useTranslations, localePath } from '../i18n/utils';
+import { url } from '../lib/url';
+
+const bg = useTranslations('bg');
+const en = useTranslations('en');
+---
+
+<BaseLayout lang="bg" title={`404 — ${bg('404.title')}`} description={bg('404.text')} noindex alternates={false} path="/bg/">
+  <section class="section notfound blueprint on-dark">
+    <div class="container">
+      <p class="notfound__code mono" aria-hidden="true">404</p>
+      <div class="notfound__cols">
+        <div>
+          <h1>{bg('404.title')}</h1>
+          <p class="lead">{bg('404.text')}</p>
+          <div class="btn-row">
+            <a class="btn" href={url(localePath('bg'))}>{bg('nav.home')} <Icon name="arrow-right" /></a>
+            <a class="btn btn--ghost" href={url(localePath('bg', 'projects'))}>{bg('nav.projects')}</a>
+          </div>
+        </div>
+        <div lang="en">
+          <h2>{en('404.title')}</h2>
+          <p class="lead">{en('404.text')}</p>
+          <div class="btn-row">
+            <a class="btn btn--ghost" href={url(localePath('en'))}>{en('nav.home')} <Icon name="arrow-right" /></a>
+            <a class="btn btn--ghost" href={url(localePath('en', 'contact'))}>{en('nav.contact')}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .notfound {
+    color: var(--c-paper);
+    padding-block: clamp(4rem, 3rem + 6vw, 8rem);
+  }
+
+  .notfound__code {
+    margin: 0 0 var(--space-5);
+    font-size: clamp(4rem, 2rem + 10vw, 9rem);
+    line-height: 1;
+    color: var(--c-accent);
+  }
+
+  .notfound__cols {
+    display: grid;
+    gap: var(--space-8);
+  }
+
+  @media (min-width: 56em) {
+    .notfound__cols {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .notfound h2 {
+    font-size: var(--fs-h2);
+  }
+</style>

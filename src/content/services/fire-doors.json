@@ -1,0 +1,29 @@
+{
+  "order": 4,
+  "icon": "door",
+  "title": { "bg": "Пожароустойчиви врати", "en": "Fire-resistant doors" },
+  "summary": {
+    "bg": "Метални пожароустойчиви врати от стоманена ламарина с пълнеж от минерална вата.",
+    "en": "Metal fire-resistant doors made of sheet steel with mineral wool infill."
+  },
+  "intro": {
+    "bg": "Изработваме метални пожароустойчиви врати от стоманена ламарина с пълнеж от минерална вата. Вратите са негорими, димоплътни и самозатварящи се.",
+    "en": "We make metal fire-resistant doors from sheet steel with a mineral wool infill. The doors are non-combustible, smoke-tight and self-closing."
+  },
+  "includes": {
+    "bg": ["Врати от стоманена ламарина с пълнеж от минерална вата", "Негорими, димоплътни, самозатварящи се", "Изработка по размер на отвора"],
+    "en": ["Sheet-steel doors with mineral wool infill", "Non-combustible, smoke-tight, self-closing", "Made to the size of the opening"]
+  },
+  "applications": {
+    "bg": ["Стълбищни клетки", "Технически и складови помещения", "Обществени и търговски сгради"],
+    "en": ["Stairwells", "Technical rooms and storage areas", "Public and commercial buildings"]
+  },
+  "note": {
+    "bg": "За класа на огнеустойчивост и документите за съответствие на конкретно изделие, моля, попитайте при запитването.",
+    "en": "Please ask about the fire-resistance class and conformity documents for a specific door when you send your request."
+  },
+  "seoDescription": {
+    "bg": "Метални пожароустойчиви врати от стоманена ламарина с минерална вата — негорими, димоплътни и самозатварящи се.",
+    "en": "Metal fire-resistant doors in sheet steel with mineral wool infill — non-combustible, smoke-tight and self-closing."
+  }
+}

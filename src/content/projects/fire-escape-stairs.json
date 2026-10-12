@@ -1,0 +1,24 @@
+{
+  "status": "published",
+  "order": 60,
+  "featured": true,
+  "category": "stairs",
+  "services": ["stairs"],
+  "title": { "bg": "Външни евакуационни и противопожарни стълби", "en": "External emergency and fire-escape stairs" },
+  "summary": {
+    "bg": "Евакуационни стълби за жилищни и обществени сгради.",
+    "en": "Emergency stairs for residential and public buildings."
+  },
+  "description": {
+    "bg": "Външните евакуационни и противопожарни стълби се изработват съобразно изискванията за жилищни и обществени сгради — от стомана или неръждаема стомана. Противопожарните стълби се обработват с пожарозащитна боя съгласно нормативните изисквания.",
+    "en": "External emergency and fire-escape stairs are built to the requirements for residential and public buildings, in steel or stainless steel. Fire-escape stairs are treated with fire-protective paint as required by regulations."
+  },
+  "materials": {
+    "bg": ["Стомана или неръждаема стомана", "Пожарозащитна боя"],
+    "en": ["Steel or stainless steel", "Fire-protective paint"]
+  },
+  "legacy": {
+    "urls": ["/portfolio/външни-евакуационни-и-противопожарн/", "/portfolio/external-emergency-and-fire-stairs/?lang=en"],
+    "images": ["2019/01/fl_5-3.jpg"]
+  }
+}

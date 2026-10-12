@@ -1,0 +1,95 @@
+---
+/**
+ * Root URL ("x-default"): sends visitors to /bg/ or /en/.
+ *
+ * Order of preference:
+ *   1. ?lang=en|de|bg in the URL (old WordPress links used ?lang=en / ?lang=de)
+ *   2. the language the visitor chose earlier with the switcher (localStorage)
+ *   3. the browser's preferred languages (any "bg…" → Bulgarian, otherwise English)
+ * Without JavaScript the page shows both language links.
+ */
+import { LANGS, langMeta } from '../i18n/ui';
+import { company } from '../data/company';
+import { absoluteUrl, url } from '../lib/url';
+import { ALLOW_INDEXING } from '../data/site';
+import '@fontsource-variable/manrope';
+import '../styles/global.css';
+
+const site = Astro.site;
+const base = url('/');
+const title = `${company.brand.bg} — ${company.metalworkBrand}`;
+---
+
+<!doctype html>
+<html lang="bg">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#202326" />
+    <title>{title}</title>
+    <meta name="description" content="Парапети, стълби, козирки и метални конструкции · Railings, stairs, canopies and metal structures." />
+    <meta name="robots" content={ALLOW_INDEXING ? 'index, follow' : 'noindex, nofollow'} />
+    <link rel="canonical" href={absoluteUrl('/', site)} />
+    {LANGS.map((l) => <link rel="alternate" hreflang={langMeta[l].htmlLang} href={absoluteUrl(`/${l}/`, site)} />)}
+    <link rel="alternate" hreflang="x-default" href={absoluteUrl('/', site)} />
+    <link rel="icon" href={url('favicon.svg')} type="image/svg+xml" />
+    <script is:inline define:vars={{ base }}>
+      (function () {
+        var lang = null;
+        try {
+          var q = new URLSearchParams(window.location.search).get('lang');
+          if (q === 'en' || q === 'de') lang = 'en';
+          else if (q === 'bg') lang = 'bg';
+        } catch (e) {}
+        if (!lang) {
+          try {
+            var saved = localStorage.getItem('site-lang');
+            if (saved === 'bg' || saved === 'en') lang = saved;
+          } catch (e) {}
+        }
+        if (!lang) {
+          var prefs = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || ''];
+          lang = prefs.some(function (l) { return /^bg\b/i.test(l); }) ? 'bg' : 'en';
+        }
+        window.location.replace(base + lang + '/');
+      })();
+    </script>
+  </head>
+  <body class="blueprint on-dark">
+    <main class="choose">
+      <p class="eyebrow">{company.metalworkBrand}</p>
+      <h1>{company.brand.bg}</h1>
+      <ul>
+        {
+          LANGS.map((l) => (
+            <li>
+              <a class="btn" href={url(`/${l}/`)} lang={langMeta[l].htmlLang} hreflang={langMeta[l].htmlLang}>
+                {langMeta[l].name}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </main>
+    <style>
+      .choose {
+        min-height: 100dvh;
+        display: grid;
+        place-content: center;
+        gap: var(--space-4);
+        padding: var(--gutter);
+        color: var(--c-paper);
+        text-align: center;
+      }
+      .choose ul {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: var(--space-3);
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+    </style>
+  </body>
+</html>

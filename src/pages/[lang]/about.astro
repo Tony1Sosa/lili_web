@@ -1,0 +1,215 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import Icon from '../../components/Icon.astro';
+import type { IconName } from '../../components/icons';
+import type { Lang } from '../../i18n/ui';
+import { langPaths, localePath, useTranslations } from '../../i18n/utils';
+import { url } from '../../lib/url';
+import { company } from '../../data/company';
+import { breadcrumbJsonLd, organizationJsonLd } from '../../lib/seo';
+
+export const getStaticPaths = langPaths;
+
+const lang = Astro.params.lang as Lang;
+const t = useTranslations(lang);
+
+const copy = {
+  bg: {
+    description:
+      'Railing Inox е металообработващото направление на „Строителна компания БГ“ ЕООД — изработка и монтаж на метални изделия с производствена база в София.',
+    lead: 'Railing Inox е металообработващото направление на „Строителна компания БГ“ ЕООД — с производствена база в София и поръчки в цялата страна и в чужбина.',
+    whoTitle: 'Кои сме ние',
+    who: [
+      'Рейлинг Инокс е създадена, за да поеме производството на метални изделия. Днес сме част от „Строителна компания БГ“ ЕООД, която обединява всички бизнес направления на групата в едно.',
+      'Изработваме и монтираме разнообразни изделия от метал — парапети, козирки, вътрешни и външни метални стълби, пожароустойчиви врати, решетки, метални халета и много други. Предлагаме както стандартни изделия по каталог, така и индивидуални и уникални проекти.',
+    ],
+    approachTitle: 'Нашият подход',
+    approach:
+      'Ние сме екип от професионалисти в своята област, готови да предложим индивидуални решения и да изпълним вашите идеи и предпочитания. Стремим се да изпълняваме всички поръчки качествено и в срок, на конкурентни цени.',
+    whyTitle: 'Защо да работите с нас',
+    why: [
+      { icon: 'factory', title: 'Собствен цех', text: 'Рязане, огъване, заваряване, обработка на инокс и прахово боядисване на едно място.' },
+      { icon: 'ruler', title: 'По каталог или по проект', text: 'Стандартни решения или изделие, изработено точно по вашия чертеж.' },
+      { icon: 'truck', title: 'Изработка и монтаж', text: 'Поемаме изделието от производството до монтажа на обекта.' },
+      { icon: 'shield', title: 'EN 1090-1 / EN 1090-2', text: 'Сертифициране по европейските стандарти за метални конструкции.' },
+      { icon: 'powder', title: 'Прахово боядисване', text: 'Детайли до 7500 мм в цветове по каталог RAL.' },
+      { icon: 'map-pin', title: 'В цялата страна и в чужбина', text: 'Производствена база в София, изпълнение на поръчки в България и в чужбина.' },
+    ],
+    factsTitle: 'Накратко',
+    facts: [
+      ['Направление', 'Railing Inox'],
+      ['Част от', '„Строителна компания БГ“ ЕООД'],
+      ['Производствена база', 'София'],
+      ['Изпълнение', 'България и чужбина'],
+    ],
+  },
+  en: {
+    description:
+      'Railing Inox is the metalwork division of Stroitelna Compania BG EOOD — fabrication and installation of metal products, with a workshop in Sofia, Bulgaria.',
+    lead: 'Railing Inox is the metalwork division of Stroitelna Compania BG EOOD — with a workshop in Sofia and orders throughout Bulgaria and abroad.',
+    whoTitle: 'Who we are',
+    who: [
+      'Railing Inox was set up to take over the production of metal products. Today we are part of Stroitelna Compania BG EOOD, which brings all of the group’s business lines together.',
+      'We fabricate and install a wide range of metal products — railings, canopies, interior and exterior metal stairs, fire-resistant doors, grilles, small metal halls and much more. We offer standard catalogue products as well as bespoke, one-off designs.',
+    ],
+    approachTitle: 'Our approach',
+    approach:
+      'We are a team of professionals in our field, ready to offer individual solutions and to bring your ideas and preferences to life. We aim to complete every order to a high standard, on time and at a competitive price.',
+    whyTitle: 'Why work with us',
+    why: [
+      { icon: 'factory', title: 'Our own workshop', text: 'Cutting, bending, welding, stainless steel finishing and powder coating in one place.' },
+      { icon: 'ruler', title: 'Catalogue or bespoke', text: 'Standard solutions, or a product made exactly to your drawings.' },
+      { icon: 'truck', title: 'Fabrication and installation', text: 'We take the product from the workshop to installation on site.' },
+      { icon: 'shield', title: 'EN 1090-1 / EN 1090-2', text: 'Certified to the European standards for metal structures.' },
+      { icon: 'powder', title: 'Powder coating', text: 'Parts up to 7500 mm in RAL catalogue colours.' },
+      { icon: 'map-pin', title: 'Bulgaria and abroad', text: 'Workshop in Sofia; we take on orders across Bulgaria and abroad.' },
+    ],
+    factsTitle: 'At a glance',
+    facts: [
+      ['Division', 'Railing Inox'],
+      ['Part of', 'Stroitelna Compania BG EOOD'],
+      ['Workshop', 'Sofia, Bulgaria'],
+      ['We work', 'Across Bulgaria and abroad'],
+    ],
+  },
+}[lang];
+
+const title = t('nav.about');
+const jsonLd = [
+  organizationJsonLd(lang, Astro.site),
+  breadcrumbJsonLd(lang, [], { label: title, href: localePath(lang, 'about') }, Astro.site),
+];
+---
+
+<BaseLayout lang={lang} title={title} description={copy.description} jsonLd={jsonLd}>
+  <PageHeader lang={lang} title={title} eyebrow={company.metalworkBrand} lead={copy.lead} />
+
+  <section class="section" aria-labelledby="who-title">
+    <div class="container about">
+      <div class="prose">
+        <h2 id="who-title">{copy.whoTitle}</h2>
+        {copy.who.map((p) => <p>{p}</p>)}
+        <h2>{copy.approachTitle}</h2>
+        <p>{copy.approach}</p>
+      </div>
+      <aside class="facts-card" aria-labelledby="facts-title">
+        <h2 id="facts-title" class="mono">{copy.factsTitle}</h2>
+        <dl>
+          {
+            copy.facts.map(([k, v]) => (
+              <div>
+                <dt>{k}</dt>
+                <dd>{v}</dd>
+              </div>
+            ))
+          }
+        </dl>
+        <a class="btn" href={url(localePath(lang, 'contact')) + '#quote'}>{t('cta.quote')}</a>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section section--white section--line" aria-labelledby="why-title">
+    <div class="container">
+      <h2 id="why-title">{copy.whyTitle}</h2>
+      <ul class="why grid grid--3">
+        {
+          copy.why.map((w) => (
+            <li data-reveal>
+              <Icon name={w.icon as IconName} size={28} strokeWidth={1.5} />
+              <h3>{w.title}</h3>
+              <p>{w.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <CtaBand lang={lang} />
+</BaseLayout>
+
+<style>
+  .about {
+    display: grid;
+    gap: var(--space-7);
+    align-items: start;
+  }
+
+  @media (min-width: 64em) {
+    .about {
+      grid-template-columns: minmax(0, 1fr) 22rem;
+      gap: var(--space-8);
+    }
+  }
+
+  .about .prose h2:first-child {
+    margin-top: 0;
+  }
+
+  .facts-card {
+    padding: var(--space-6);
+    background: var(--c-ink);
+    color: var(--c-paper);
+    border-radius: var(--radius);
+  }
+
+  .facts-card h2 {
+    font-size: var(--fs-xs);
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--c-accent);
+  }
+
+  .facts-card dl {
+    margin: 0 0 var(--space-6);
+  }
+
+  .facts-card dl > div {
+    padding: var(--space-3) 0;
+    border-bottom: 1px solid var(--c-ink-3);
+  }
+
+  .facts-card dt {
+    font-size: var(--fs-xs);
+    color: var(--c-steel);
+  }
+
+  .facts-card dd {
+    margin: 0;
+    font-weight: 700;
+  }
+
+  .facts-card .btn {
+    width: 100%;
+  }
+
+  .why {
+    margin: var(--space-6) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .why li {
+    padding: var(--space-5) 0;
+    border-top: 2px solid var(--c-ink);
+  }
+
+  .why li :global(svg) {
+    margin-bottom: var(--space-3);
+    color: var(--c-accent-ink);
+  }
+
+  .why h3 {
+    font-size: var(--fs-h4);
+    margin-bottom: var(--space-2);
+  }
+
+  .why p {
+    margin: 0;
+    color: var(--c-muted);
+  }
+</style>

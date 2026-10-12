@@ -1,0 +1,33 @@
+{
+  "order": 9,
+  "icon": "cut",
+  "title": { "bg": "Металообработка", "en": "Cutting, bending & machining" },
+  "summary": {
+    "bg": "Плазмено рязане, огъване на абкант до 3100 мм, MIG/MAG заваряване, шлайфане на инокс, стругови и фрезови услуги.",
+    "en": "Plasma cutting, press-brake bending up to 3100 mm, MIG/MAG welding, stainless steel finishing, turning and milling."
+  },
+  "intro": {
+    "bg": "Работилницата ни разполага с оборудване за целия процес на изработка, което предлагаме и като отделни услуги: рязане, огъване, заваряване, повърхностна обработка на неръждаема стомана, стругови и фрезови операции.",
+    "en": "Our workshop has equipment for the full fabrication process, which we also offer as individual services: cutting, bending, welding, stainless steel surface finishing, turning and milling."
+  },
+  "includes": {
+    "bg": [
+      "Плазмено рязане",
+      "Огъване на абкант с дължина до 3100 мм",
+      "MIG/MAG заваряване с двоен пулс, включително на алуминий",
+      "Шлайфане и повърхностна обработка на неръждаема стомана",
+      "Стругови и фрезови услуги"
+    ],
+    "en": [
+      "Plasma cutting",
+      "Press-brake bending up to 3100 mm",
+      "Double-pulse MIG/MAG welding, including aluminium",
+      "Grinding and surface finishing of stainless steel",
+      "Turning and milling"
+    ]
+  },
+  "seoDescription": {
+    "bg": "Плазмено рязане, огъване на абкант до 3100 мм, MIG/MAG заваряване, шлайфане на инокс, стругови и фрезови услуги в София.",
+    "en": "Plasma cutting, press-brake bending up to 3100 mm, MIG/MAG welding, stainless steel finishing, turning and milling in Sofia."
+  }
+}

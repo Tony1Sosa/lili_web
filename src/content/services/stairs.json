@@ -1,0 +1,49 @@
+{
+  "order": 2,
+  "icon": "stairs",
+  "title": { "bg": "Метални стълби", "en": "Metal stairs" },
+  "summary": {
+    "bg": "Вътрешни и външни стълби — прави и вити, от стомана или инокс, включително евакуационни и противопожарни стълби.",
+    "en": "Interior and exterior stairs — straight and spiral, in steel or stainless steel, including emergency and fire-escape stairs."
+  },
+  "intro": {
+    "bg": "Изработваме прави и вити стълби от стомана или неръждаема стомана — по каталог или по индивидуален проект — както и външни евакуационни и противопожарни стълби за жилищни и обществени сгради.",
+    "en": "We fabricate straight and spiral stairs in steel or stainless steel — from our catalogue or to an individual design — as well as external emergency and fire-escape stairs for residential and public buildings."
+  },
+  "includes": {
+    "bg": [
+      "Прави стълби",
+      "Вити стълби",
+      "Външни евакуационни и противопожарни стълби, съобразени с изискванията за жилищни и обществени сгради",
+      "Парапети към стълбите",
+      "Монтаж на обекта"
+    ],
+    "en": [
+      "Straight stairs",
+      "Spiral stairs",
+      "External emergency and fire-escape stairs designed to the requirements for residential and public buildings",
+      "Matching stair railings",
+      "Installation on site"
+    ]
+  },
+  "applications": {
+    "bg": ["Жилищни сгради и къщи", "Офис и търговски сгради", "Обществени сгради — евакуационни пътища"],
+    "en": ["Houses and residential buildings", "Office and commercial buildings", "Public buildings — escape routes"]
+  },
+  "materials": {
+    "bg": [
+      "Стомана или неръждаема стомана за носещата конструкция",
+      "Стъпала от стъкло, дърво, алуминиева релефна ламарина или ламарина",
+      "Пожарозащитна боя за противопожарни стълби съгласно нормативните изисквания"
+    ],
+    "en": [
+      "Steel or stainless steel load-bearing structure",
+      "Treads in glass, timber, aluminium chequer plate or sheet steel",
+      "Fire-protective paint for fire-escape stairs, as required by regulations"
+    ]
+  },
+  "seoDescription": {
+    "bg": "Прави и вити метални стълби от стомана и инокс, външни евакуационни и противопожарни стълби — изработка и монтаж.",
+    "en": "Straight and spiral metal stairs in steel and stainless steel, external emergency and fire-escape stairs — fabrication and installation."
+  }
+}

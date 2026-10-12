@@ -1,0 +1,46 @@
+---
+/** Redirect pages for old WordPress URLs. See src/data/legacy-redirects.ts. */
+import { legacyRedirects, type LegacyRedirect } from '../data/legacy-redirects';
+import { absoluteUrl, url } from '../lib/url';
+
+export function getStaticPaths() {
+  return legacyRedirects.map((redirect) => ({ params: { legacy: redirect.from }, props: { redirect } }));
+}
+
+interface Props {
+  redirect: LegacyRedirect;
+}
+
+const { redirect } = Astro.props;
+const targets = {
+  bg: url(redirect.to ? `/bg/${redirect.to}/` : '/bg/'),
+  en: url(redirect.to ? `/en/${redirect.to}/` : '/en/'),
+};
+const fallback = targets[redirect.defaultLang];
+const canonical = absoluteUrl(redirect.to ? `/${redirect.defaultLang}/${redirect.to}/` : `/${redirect.defaultLang}/`, Astro.site);
+---
+
+<!doctype html>
+<html lang={redirect.defaultLang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Redirecting…</title>
+    <meta name="robots" content="noindex, follow" />
+    <link rel="canonical" href={canonical} />
+    <script is:inline define:vars={{ targets, fallback }}>
+      (function () {
+        var q = null;
+        try {
+          q = new URLSearchParams(window.location.search).get('lang');
+        } catch (e) {}
+        var target = q === 'en' || q === 'de' ? targets.en : q === 'bg' ? targets.bg : fallback;
+        window.location.replace(target + window.location.hash);
+      })();
+    </script>
+    <noscript><meta http-equiv="refresh" content={`0; url=${fallback}`} /></noscript>
+  </head>
+  <body>
+    <p><a href={fallback}>{canonical}</a></p>
+  </body>
+</html>

@@ -1,0 +1,47 @@
+{
+  "order": 3,
+  "icon": "canopy",
+  "title": { "bg": "Козирки", "en": "Canopies" },
+  "summary": {
+    "bg": "Козирки от поликарбонат и стъкло с носеща конструкция от инокс или черен метал.",
+    "en": "Polycarbonate and glass canopies with stainless steel or black-steel frames."
+  },
+  "intro": {
+    "bg": "Козирките защитават входове, врати и тераси от дъжд и сняг. Изработваме козирки от поликарбонат и стъклени козирки с носеща рамка от неръждаема стомана или черен метал.",
+    "en": "Canopies protect entrances, doors and terraces from rain and snow. We make polycarbonate canopies and glass canopies on stainless steel or black-steel frames."
+  },
+  "includes": {
+    "bg": [
+      "Козирки от поликарбонат",
+      "Стъклени козирки",
+      "Носеща рамка от тръби, квадратни профили или ферми",
+      "Монтаж на обекта"
+    ],
+    "en": [
+      "Polycarbonate canopies",
+      "Glass canopies",
+      "Supporting frames made of tubes, square profiles or trusses",
+      "Installation on site"
+    ]
+  },
+  "applications": {
+    "bg": ["Входове на жилищни и търговски сгради", "Външни врати", "Тераси"],
+    "en": ["Entrances of residential and commercial buildings", "External doors", "Terraces"]
+  },
+  "materials": {
+    "bg": [
+      "Рамка от неръждаема стомана или черен метал",
+      "Поликарбонат — прозрачен, цветен или матов, в различни дебелини; кухокамерен или плътен",
+      "Стъкло"
+    ],
+    "en": [
+      "Stainless steel or black-steel frame",
+      "Polycarbonate — clear, tinted or matt, in various thicknesses; multiwall or solid",
+      "Glass"
+    ]
+  },
+  "seoDescription": {
+    "bg": "Козирки от поликарбонат и стъкло с конструкция от инокс или черен метал — изработка и монтаж за входове и тераси.",
+    "en": "Polycarbonate and glass canopies with stainless steel or black-steel frames — fabrication and installation for entrances and terraces."
+  }
+}

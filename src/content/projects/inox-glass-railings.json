@@ -1,0 +1,21 @@
+{
+  "status": "published",
+  "order": 20,
+  "featured": true,
+  "category": "railings",
+  "services": ["railings"],
+  "title": { "bg": "Парапети от инокс и стъкло", "en": "Stainless steel and glass railings" },
+  "summary": {
+    "bg": "Подбрани изпълнени парапети от неръждаема стомана и стъкло.",
+    "en": "A selection of completed stainless steel and glass railings."
+  },
+  "description": {
+    "bg": "Комбинацията от инокс и стъкло дава лек, модерен вид, без да пречи на светлината и гледката. Предлагаме набор от парапети и компоненти, с които да постигнем желания облик и изискванията за безопасност.",
+    "en": "Combining stainless steel with glass gives a light, modern look without blocking light or views. We offer a range of railings and components to achieve the desired appearance and meet safety requirements."
+  },
+  "materials": { "bg": ["Неръждаема стомана (инокс)", "Стъкло"], "en": ["Stainless steel (inox)", "Glass"] },
+  "legacy": {
+    "urls": ["/portfolio/нестандартни-метални-решения/", "/portfolio/railings-from-inox-and-glass/?lang=en"],
+    "images": ["2019/01/godech_3-3.jpg"]
+  }
+}

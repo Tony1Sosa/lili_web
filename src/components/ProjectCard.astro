@@ -1,0 +1,115 @@
+---
+import type { Lang } from '../i18n/ui';
+import { localePath, photoCount, useTranslations } from '../i18n/utils';
+import { url } from '../lib/url';
+import { categoryLabel, type Project } from '../lib/content';
+import ProjectMedia from './ProjectMedia.astro';
+import Icon from './Icon.astro';
+
+interface Props {
+  project: Project;
+  lang: Lang;
+  headingLevel?: 'h2' | 'h3';
+  loading?: 'lazy' | 'eager';
+}
+
+const { project, lang, headingLevel: Heading = 'h3', loading } = Astro.props;
+const t = useTranslations(lang);
+const href = url(localePath(lang, `projects/${project.id}`));
+const count = project.photos.length;
+---
+
+<article class="project-card" data-category={project.data.category}>
+  <ProjectMedia project={project} lang={lang} loading={loading} decorative />
+  <div class="project-card__body">
+    <p class="project-card__cat">{categoryLabel(project.data.category, lang)}</p>
+    <Heading class="project-card__title">
+      <a href={href}>{project.data.title[lang]}</a>
+    </Heading>
+    <p class="project-card__summary">{project.data.summary[lang]}</p>
+    <p class="project-card__meta">
+      <Icon name="camera" size={16} />
+      {count > 0 ? photoCount(lang, count) : t('projects.photosPending')}
+    </p>
+  </div>
+</article>
+
+<style>
+  .project-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: var(--c-white);
+    border: 1px solid var(--c-line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: box-shadow 0.25s var(--ease), border-color 0.25s var(--ease);
+  }
+
+  .project-card:hover {
+    box-shadow: var(--shadow-2);
+    border-color: var(--c-line-2);
+  }
+
+  .project-card:hover :global(img) {
+    transform: scale(1.03);
+  }
+
+  .project-card:focus-within {
+    box-shadow: var(--focus);
+  }
+
+  .project-card__body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: var(--space-5);
+  }
+
+  .project-card__cat {
+    margin: 0 0 var(--space-2);
+    font-family: var(--f-mono);
+    font-size: var(--fs-xs);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--c-accent-ink);
+  }
+
+  .project-card__title {
+    margin: 0 0 var(--space-2);
+    font-size: var(--fs-h4);
+  }
+
+  .project-card__title a {
+    color: var(--c-ink);
+    text-decoration: none;
+  }
+
+  /* The whole card is clickable through the title link. */
+  .project-card__title a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  .project-card__title a:focus-visible {
+    box-shadow: none;
+  }
+
+  .project-card__summary {
+    color: var(--c-muted);
+    font-size: var(--fs-sm);
+  }
+
+  .project-card__meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin: auto 0 0;
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--c-line);
+    font-family: var(--f-mono);
+    font-size: var(--fs-xs);
+    color: var(--c-muted);
+  }
+</style>

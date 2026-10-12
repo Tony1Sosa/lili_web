@@ -1,0 +1,24 @@
+{
+  "status": "published",
+  "order": 50,
+  "featured": true,
+  "category": "stairs",
+  "services": ["stairs", "railings"],
+  "title": { "bg": "Прави и вити стълби", "en": "Straight and spiral stairs" },
+  "summary": {
+    "bg": "Вътрешни и външни метални стълби — прави и вити.",
+    "en": "Interior and exterior metal stairs — straight and spiral."
+  },
+  "description": {
+    "bg": "Прави и вити стълби от стомана или неръждаема стомана — по каталог или по индивидуален проект. Стъпалата могат да бъдат от стъкло, дърво, алуминиева релефна ламарина или ламарина.",
+    "en": "Straight and spiral stairs in steel or stainless steel — from our catalogue or to an individual design. Treads can be glass, timber, aluminium chequer plate or sheet steel."
+  },
+  "materials": {
+    "bg": ["Стомана", "Неръждаема стомана", "Стъкло, дърво или ламарина за стъпалата"],
+    "en": ["Steel", "Stainless steel", "Glass, timber or sheet-metal treads"]
+  },
+  "legacy": {
+    "urls": ["/portfolio/прави-и-вити-стълби/", "/portfolio/gerade-und-geschwungene-treppen/?lang=de"],
+    "images": ["2019/01/IMGP2413A-1.jpg"]
+  }
+}

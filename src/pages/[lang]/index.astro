@@ -1,0 +1,567 @@
+---
+import { Picture } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Icon from '../../components/Icon.astro';
+import ServiceCard from '../../components/ServiceCard.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import type { IconName } from '../../components/icons';
+import type { Lang } from '../../i18n/ui';
+import { langPaths, localePath, useTranslations } from '../../i18n/utils';
+import { url } from '../../lib/url';
+import { getProjects, getServices, heroImage } from '../../lib/content';
+import { organizationJsonLd } from '../../lib/seo';
+
+export const getStaticPaths = langPaths;
+
+const lang = Astro.params.lang as Lang;
+const t = useTranslations(lang);
+const services = await getServices();
+const projects = await getProjects();
+const featured = projects.filter((p) => p.data.featured).slice(0, 6);
+
+const copy = {
+  bg: {
+    metaDescription:
+      'Изработка и монтаж на парапети от инокс и стъкло, метални стълби, козирки, пожароустойчиви врати, огради и метални конструкции. Собствен цех в София, EN 1090.',
+    eyebrow: 'Railing Inox · Производствена база в София',
+    title: 'Метални изделия по проект — от чертежа до монтажа.',
+    lead: 'Изработваме и монтираме парапети, стълби, козирки, пожароустойчиви врати, огради и метални конструкции — по каталог или по ваш индивидуален проект. Изпълняваме поръчки в цялата страна и в чужбина.',
+    heroAlt: 'Изпълнен проект на фирмата',
+    specTitle: 'В нашия цех',
+    servicesEyebrow: 'Продукти и услуги',
+    servicesTitle: 'Какво изработваме',
+    servicesText: 'От единичен парапет до металните елементи на цяла сграда — изработени и монтирани от един екип.',
+    projectsEyebrow: 'Портфолио',
+    projectsTitle: 'Избрани проекти',
+    projectsText: 'Изделия, изработени в нашия цех. Разгледайте всички проекти по категории.',
+    mfgEyebrow: 'Производство',
+    mfgTitle: 'Собствен цех с пълен производствен цикъл',
+    mfgText:
+      'Рязане, огъване, заваряване, повърхностна обработка и прахово боядисване под един покрив — така контролираме качеството и сроковете на всяка поръчка.',
+    qualityEyebrow: 'Качество',
+    qualityTitle: 'Стандарти, материали и покрития',
+    quality: [
+      {
+        icon: 'shield',
+        title: 'EN 1090-1 и EN 1090-2',
+        text: 'Фирмата е сертифицирана по европейските стандарти за изпълнение на стоманени и алуминиеви конструкции.',
+      },
+      {
+        icon: 'powder',
+        title: 'Прахово боядисване до 7500 мм',
+        text: 'Собствена линия за прахово боядисване на детайли с дължина до 7500 мм в цветове по каталог RAL.',
+      },
+      {
+        icon: 'layers',
+        title: 'Подходящият материал',
+        text: 'Неръждаема стомана, черен метал, алуминий, стъкло, поликарбонат и дърво — според предназначението и бюджета.',
+      },
+    ],
+    aboutEyebrow: 'За нас',
+    aboutTitle: 'Railing Inox — част от Строителна компания БГ',
+    aboutText: [
+      'Рейлинг Инокс е създадена, за да поеме производството на метални изделия и е част от „Строителна компания БГ“ ЕООД, която обединява бизнес направленията на групата.',
+      'Предлагаме както стандартни изделия по каталог, така и индивидуални и уникални проекти. Стремим се да изпълняваме всяка поръчка качествено, в срок и на конкурентна цена.',
+    ],
+    processEyebrow: 'Как работим',
+    processTitle: 'От запитване до монтаж',
+    process: [
+      { icon: 'message', title: 'Запитване', text: 'Изпратете описание, размери и снимки или чертеж — през формата, по телефон или имейл.' },
+      { icon: 'ruler', title: 'Уточняване', text: 'Обсъждаме материалите, покритието и детайлите. При нужда правим оглед и замерване на място.' },
+      { icon: 'document', title: 'Оферта', text: 'Получавате оферта с цена и срок за изпълнение.' },
+      { icon: 'factory', title: 'Изработка', text: 'Изделието се произвежда в нашия цех в София.' },
+      { icon: 'truck', title: 'Монтаж', text: 'Монтираме на обекта — в цялата страна.' },
+    ],
+    ctaTitle: 'Разкажете ни за вашия проект',
+    ctaText: 'Изпратете запитване с описание и размери. Ще се свържем с вас, за да уточним детайлите и да подготвим оферта.',
+  },
+  en: {
+    metaDescription:
+      'Fabrication and installation of stainless steel and glass railings, metal stairs, canopies, fire-resistant doors, fences and metal structures. Own workshop in Sofia, Bulgaria. EN 1090.',
+    eyebrow: 'Railing Inox · Workshop in Sofia, Bulgaria',
+    title: 'Custom metalwork — from drawing to installation.',
+    lead: 'We fabricate and install railings, stairs, canopies, fire-resistant doors, fences and metal structures — from our catalogue or to your own design. We take on orders throughout Bulgaria and abroad.',
+    heroAlt: 'A completed company project',
+    specTitle: 'In our workshop',
+    servicesEyebrow: 'Products & services',
+    servicesTitle: 'What we make',
+    servicesText: 'From a single railing to the metalwork for an entire building — made and installed by one team.',
+    projectsEyebrow: 'Portfolio',
+    projectsTitle: 'Selected projects',
+    projectsText: 'Work produced in our own workshop. Browse all projects by category.',
+    mfgEyebrow: 'Manufacturing',
+    mfgTitle: 'Our own workshop, the full production cycle',
+    mfgText:
+      'Cutting, bending, welding, surface finishing and powder coating under one roof — so we control the quality and lead time of every order.',
+    qualityEyebrow: 'Quality',
+    qualityTitle: 'Standards, materials and finishes',
+    quality: [
+      {
+        icon: 'shield',
+        title: 'EN 1090-1 and EN 1090-2',
+        text: 'The company is certified to the European standards for the execution of steel and aluminium structures.',
+      },
+      {
+        icon: 'powder',
+        title: 'Powder coating up to 7500 mm',
+        text: 'In-house powder coating of parts up to 7500 mm long, in RAL catalogue colours.',
+      },
+      {
+        icon: 'layers',
+        title: 'The right material',
+        text: 'Stainless steel, black steel, aluminium, glass, polycarbonate and timber — chosen for the purpose and the budget.',
+      },
+    ],
+    aboutEyebrow: 'About us',
+    aboutTitle: 'Railing Inox — part of Stroitelna Compania BG',
+    aboutText: [
+      'Railing Inox was set up to take over the group’s production of metal products and is part of Stroitelna Compania BG EOOD, which brings together the group’s business lines.',
+      'We offer standard catalogue products as well as bespoke, one-off designs. We aim to deliver every order to a high standard, on time and at a competitive price.',
+    ],
+    processEyebrow: 'How we work',
+    processTitle: 'From enquiry to installation',
+    process: [
+      { icon: 'message', title: 'Enquiry', text: 'Send us a description, dimensions and photos or drawings — via the form, by phone or by email.' },
+      { icon: 'ruler', title: 'Details', text: 'We agree materials, finish and details. Where needed, we visit the site to take measurements.' },
+      { icon: 'document', title: 'Quotation', text: 'You receive a quotation with the price and lead time.' },
+      { icon: 'factory', title: 'Fabrication', text: 'Your product is made in our workshop in Sofia.' },
+      { icon: 'truck', title: 'Installation', text: 'We install on site — anywhere in Bulgaria.' },
+    ],
+    ctaTitle: 'Tell us about your project',
+    ctaText: 'Send an enquiry with a description and dimensions. We will get back to you to clarify the details and prepare a quotation.',
+  },
+}[lang];
+
+const specs: { k: string; v: string; icon: IconName }[] =
+  lang === 'bg'
+    ? [
+        { icon: 'shield', k: 'Сертифициране', v: 'EN 1090-1 / -2' },
+        { icon: 'powder', k: 'Прахово боядисване', v: 'до 7500 мм · RAL' },
+        { icon: 'bend', k: 'Огъване (абкант)', v: 'до 3100 мм' },
+        { icon: 'cut', k: 'Рязане', v: 'плазма' },
+        { icon: 'weld', k: 'Заваряване', v: 'MIG/MAG, двоен пулс' },
+        { icon: 'mill', k: 'Механична обработка', v: 'струг · фреза' },
+      ]
+    : [
+        { icon: 'shield', k: 'Certification', v: 'EN 1090-1 / -2' },
+        { icon: 'powder', k: 'Powder coating', v: 'up to 7500 mm · RAL' },
+        { icon: 'bend', k: 'Press-brake bending', v: 'up to 3100 mm' },
+        { icon: 'cut', k: 'Cutting', v: 'plasma' },
+        { icon: 'weld', k: 'Welding', v: 'MIG/MAG, double pulse' },
+        { icon: 'mill', k: 'Machining', v: 'turning · milling' },
+      ];
+
+const jsonLd = [organizationJsonLd(lang, Astro.site)];
+---
+
+<BaseLayout lang={lang} description={copy.metaDescription} jsonLd={jsonLd}>
+  <!-- Hero -->
+  <section class="hero blueprint on-dark">
+    <div class="container hero__grid">
+      <div class="hero__text">
+        <p class="eyebrow">{copy.eyebrow}</p>
+        <h1>{copy.title}</h1>
+        <p class="lead">{copy.lead}</p>
+        <div class="btn-row">
+          <a class="btn" href={url(localePath(lang, 'contact')) + '#quote'}>
+            {t('cta.quote')}
+            <Icon name="arrow-right" />
+          </a>
+          <a class="btn btn--ghost" href={url(localePath(lang, 'projects'))}>{t('cta.projects')}</a>
+        </div>
+      </div>
+
+      {
+        heroImage ? (
+          <div class="hero__photo">
+            <Picture
+              src={heroImage}
+              alt={copy.heroAlt}
+              widths={[640, 960, 1280, 1600]}
+              sizes="(min-width: 64em) 40vw, 100vw"
+              formats={['avif', 'webp']}
+              loading="eager"
+              fetchpriority="high"
+            />
+          </div>
+        ) : (
+          <aside class="spec-panel" aria-labelledby="spec-title">
+            <p class="spec-panel__title mono" id="spec-title">
+              {copy.specTitle}
+            </p>
+            <ul>
+              {specs.map((s) => (
+                <li>
+                  <Icon name={s.icon} size={20} />
+                  <span class="spec-panel__k">{s.k}</span>
+                  <span class="spec-panel__v mono">{s.v}</span>
+                </li>
+              ))}
+            </ul>
+          </aside>
+        )
+      }
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section class="section" aria-labelledby="services-title">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">{copy.servicesEyebrow}</p>
+          <h2 id="services-title">{copy.servicesTitle}</h2>
+          <p>{copy.servicesText}</p>
+        </div>
+        <a class="link-arrow" href={url(localePath(lang, 'products'))}>
+          {t('cta.allServices')}
+          <Icon name="arrow-right" />
+        </a>
+      </div>
+      <div class="grid grid--3">
+        {services.map((s, i) => <ServiceCard service={s} lang={lang} index={i} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured projects -->
+  {
+    featured.length > 0 && (
+      <section class="section section--white section--line" aria-labelledby="projects-title">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">{copy.projectsEyebrow}</p>
+              <h2 id="projects-title">{copy.projectsTitle}</h2>
+              <p>{copy.projectsText}</p>
+            </div>
+            <a class="link-arrow" href={url(localePath(lang, 'projects'))}>
+              {t('cta.allProjects')}
+              <Icon name="arrow-right" />
+            </a>
+          </div>
+          <div class="grid grid--3">
+            {featured.map((p) => (
+              <ProjectCard project={p} lang={lang} />
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- Manufacturing -->
+  <section class="section section--dark" aria-labelledby="mfg-title">
+    <div class="container mfg">
+      <div>
+        <p class="eyebrow">{copy.mfgEyebrow}</p>
+        <h2 id="mfg-title">{copy.mfgTitle}</h2>
+        <p class="lead">{copy.mfgText}</p>
+        <a class="btn btn--ghost" href={url(localePath(lang, 'manufacturing'))}>
+          {t('cta.manufacturing')}
+          <Icon name="arrow-right" />
+        </a>
+      </div>
+      <ul class="mfg__list">
+        {
+          specs.map((s) => (
+            <li data-reveal>
+              <Icon name={s.icon} size={28} strokeWidth={1.5} />
+              <span class="mfg__k">{s.k}</span>
+              <span class="mfg__v mono">{s.v}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- Quality -->
+  <section class="section" aria-labelledby="quality-title">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">{copy.qualityEyebrow}</p>
+          <h2 id="quality-title">{copy.qualityTitle}</h2>
+        </div>
+      </div>
+      <div class="grid grid--3">
+        {
+          copy.quality.map((q) => (
+            <div class="quality-card" data-reveal>
+              <Icon name={q.icon as IconName} size={32} strokeWidth={1.5} />
+              <h3>{q.title}</h3>
+              <p>{q.text}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- About + process -->
+  <section class="section section--white section--line" aria-labelledby="about-title">
+    <div class="container about-home">
+      <div>
+        <p class="eyebrow">{copy.aboutEyebrow}</p>
+        <h2 id="about-title">{copy.aboutTitle}</h2>
+        {copy.aboutText.map((p) => <p>{p}</p>)}
+        <a class="link-arrow" href={url(localePath(lang, 'about'))}>
+          {t('cta.learnMore')}
+          <Icon name="arrow-right" />
+        </a>
+      </div>
+      <div>
+        <p class="eyebrow">{copy.processEyebrow}</p>
+        <h2 class="process-title">{copy.processTitle}</h2>
+        <ol class="process">
+          {
+            copy.process.map((step, i) => (
+              <li data-reveal>
+                <span class="process__num mono" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                <Icon name={step.icon as IconName} size={24} class="process__icon" />
+                <div>
+                  <h3>{step.title}</h3>
+                  <p>{step.text}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand lang={lang} title={copy.ctaTitle} text={copy.ctaText} />
+</BaseLayout>
+
+<style>
+  .hero {
+    color: var(--c-paper);
+    padding-block: clamp(3rem, 2rem + 5vw, 7rem);
+    border-bottom: 1px solid var(--c-ink-3);
+  }
+
+  .hero__grid {
+    display: grid;
+    gap: var(--space-7);
+    align-items: center;
+  }
+
+  @media (min-width: 64em) {
+    .hero__grid {
+      grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+      gap: var(--space-8);
+    }
+  }
+
+  .hero h1 {
+    max-width: 16ch;
+  }
+
+  .hero .lead {
+    margin-bottom: var(--space-6);
+  }
+
+  .hero__photo {
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+  }
+
+  .hero__photo :global(picture) {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .hero__photo :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .spec-panel {
+    position: relative;
+    padding: var(--space-6);
+    background: rgb(43 47 51 / 0.85);
+    border: 1px solid var(--c-ink-3);
+    border-radius: var(--radius-lg);
+  }
+
+  .spec-panel::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: var(--space-6);
+    width: 3rem;
+    height: 3px;
+    background: var(--c-accent);
+  }
+
+  .spec-panel__title {
+    margin: 0 0 var(--space-4);
+    font-size: var(--fs-xs);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--c-steel);
+  }
+
+  .spec-panel ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .spec-panel li {
+    display: grid;
+    grid-template-columns: 1.5rem minmax(0, 1fr) auto;
+    gap: var(--space-3);
+    align-items: center;
+    padding: var(--space-3) 0;
+    border-top: 1px solid var(--c-ink-3);
+    font-size: var(--fs-sm);
+  }
+
+  .spec-panel li :global(svg) {
+    color: var(--c-accent);
+  }
+
+  .spec-panel__v {
+    text-align: right;
+    color: var(--c-paper);
+    font-size: var(--fs-xs);
+  }
+
+  .spec-panel__k {
+    color: var(--c-steel);
+  }
+
+  .mfg {
+    display: grid;
+    gap: var(--space-7);
+    align-items: center;
+  }
+
+  @media (min-width: 64em) {
+    .mfg {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+    }
+  }
+
+  .mfg .lead {
+    margin-bottom: var(--space-6);
+  }
+
+  .mfg__list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 13rem), 1fr));
+    gap: 1px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    background: var(--c-ink-3);
+    border: 1px solid var(--c-ink-3);
+  }
+
+  .mfg__list li {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-5);
+    background: var(--c-ink);
+  }
+
+  .mfg__list li :global(svg) {
+    color: var(--c-accent);
+    margin-bottom: var(--space-2);
+  }
+
+  .mfg__k {
+    font-weight: 700;
+  }
+
+  .mfg__v {
+    font-size: var(--fs-xs);
+    color: var(--c-steel);
+  }
+
+  .quality-card {
+    padding: var(--space-6);
+    border-top: 3px solid var(--c-ink);
+    background: var(--c-white);
+    border-radius: 0 0 var(--radius) var(--radius);
+    box-shadow: var(--shadow-1);
+  }
+
+  .quality-card :global(svg) {
+    margin-bottom: var(--space-4);
+    color: var(--c-accent-ink);
+  }
+
+  .quality-card h3 {
+    font-size: var(--fs-h4);
+  }
+
+  .quality-card p {
+    margin: 0;
+    color: var(--c-muted);
+  }
+
+  .about-home {
+    display: grid;
+    gap: var(--space-8);
+  }
+
+  @media (min-width: 64em) {
+    .about-home {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .process-title {
+    font-size: var(--fs-h3);
+  }
+
+  .process {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: step;
+  }
+
+  .process li {
+    display: grid;
+    grid-template-columns: 2.5rem 1.5rem minmax(0, 1fr);
+    gap: var(--space-3);
+    align-items: start;
+    padding: var(--space-4) 0;
+    border-top: 1px solid var(--c-line);
+  }
+
+  .process li:last-child {
+    border-bottom: 1px solid var(--c-line);
+  }
+
+  .process__num {
+    font-size: var(--fs-sm);
+    color: var(--c-accent-ink);
+    padding-top: 0.15rem;
+  }
+
+  .process :global(.process__icon) {
+    color: var(--c-muted);
+  }
+
+  .process h3 {
+    margin-bottom: var(--space-1);
+    font-size: var(--fs-base);
+  }
+
+  .process p {
+    margin: 0;
+    color: var(--c-muted);
+    font-size: var(--fs-sm);
+  }
+</style>

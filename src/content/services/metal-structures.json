@@ -1,0 +1,21 @@
+{
+  "order": 6,
+  "icon": "structure",
+  "title": { "bg": "Метални конструкции", "en": "Metal structures" },
+  "summary": {
+    "bg": "Метални халета и конструкции по проект, изпълнени съгласно EN 1090.",
+    "en": "Small metal halls and structures built to design, in line with EN 1090."
+  },
+  "intro": {
+    "bg": "Освен архитектурни метални изделия, изработваме и метални конструкции и халета по проект. Фирмата посочва сертифициране по EN 1090-1 и EN 1090-2 — стандартите за изпълнение на стоманени и алуминиеви конструкции.",
+    "en": "Besides architectural metalwork, we fabricate metal structures and small halls to design. The company states certification to EN 1090-1 and EN 1090-2 — the standards for the execution of steel and aluminium structures."
+  },
+  "includes": {
+    "bg": ["Метални халета", "Метални конструкции по проект или чертеж", "Прахово боядисване на детайли с дължина до 7500 мм", "Монтаж на обекта"],
+    "en": ["Small metal halls", "Metal structures to your design or drawings", "Powder coating of parts up to 7500 mm long", "Installation on site"]
+  },
+  "seoDescription": {
+    "bg": "Метални конструкции и халета по проект — изработка, прахово боядисване и монтаж. EN 1090-1 / EN 1090-2.",
+    "en": "Metal structures and small halls built to design — fabrication, powder coating and installation. EN 1090-1 / EN 1090-2."
+  }
+}

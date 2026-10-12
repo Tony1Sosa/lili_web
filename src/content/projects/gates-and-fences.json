@@ -1,0 +1,21 @@
+{
+  "status": "published",
+  "order": 100,
+  "featured": false,
+  "category": "doors-fencing",
+  "services": ["gates-fences-grilles"],
+  "title": { "bg": "Врати и огради", "en": "Gates and fences" },
+  "summary": {
+    "bg": "Плътни и ажурни метални огради и врати.",
+    "en": "Solid and open-pattern metal fences and gates."
+  },
+  "description": {
+    "bg": "Плътни огради от стоманена ламарина и ажурни огради от метални профили, заедно с прилежащите врати и порти.",
+    "en": "Solid fences from sheet steel and open-pattern fences from metal profiles, together with matching gates and doors."
+  },
+  "materials": { "bg": ["Стоманена ламарина", "Метални профили"], "en": ["Sheet steel", "Metal profiles"] },
+  "legacy": {
+    "urls": ["/portfolio/огради/", "/portfolio/doors-and-fences/?lang=en"],
+    "images": ["2019/01/scan0001-1.jpg"]
+  }
+}

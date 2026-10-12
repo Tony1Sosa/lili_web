@@ -1,0 +1,181 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHeader from '../../../components/PageHeader.astro';
+import ProjectCard from '../../../components/ProjectCard.astro';
+import CtaBand from '../../../components/CtaBand.astro';
+import type { Lang } from '../../../i18n/ui';
+import { langPaths, localePath, useTranslations } from '../../../i18n/utils';
+import { categoryLabel, getProjects, usedCategories } from '../../../lib/content';
+import { breadcrumbJsonLd } from '../../../lib/seo';
+
+export const getStaticPaths = langPaths;
+
+const lang = Astro.params.lang as Lang;
+const t = useTranslations(lang);
+const projects = await getProjects();
+const cats = usedCategories(projects);
+const countFor = (id: string) => projects.filter((p) => p.data.category === id).length;
+
+const copy = {
+  bg: {
+    lead: 'Подбрани изделия, изработени и монтирани от нашия екип — парапети, стълби, козирки, врати, огради и нестандартни метални изделия.',
+    description: 'Портфолио с изпълнени проекти: парапети от инокс и стъкло, метални стълби, козирки, пожароустойчиви врати, огради и нестандартни изделия.',
+  },
+  en: {
+    lead: 'A selection of work fabricated and installed by our team — railings, stairs, canopies, doors, fences and custom metal products.',
+    description: 'Portfolio of completed work: stainless steel and glass railings, metal stairs, canopies, fire-resistant doors, fences and custom fabrication.',
+  },
+}[lang];
+
+const title = t('nav.projects');
+const jsonLd = [breadcrumbJsonLd(lang, [], { label: title, href: localePath(lang, 'projects') }, Astro.site)];
+---
+
+<BaseLayout lang={lang} title={title} description={copy.description} jsonLd={jsonLd}>
+  <PageHeader lang={lang} title={title} lead={copy.lead} />
+
+  <section class="section gallery" data-gallery data-showing-template={t('projects.showing', { n: '{n}' })}>
+    <div class="container">
+      <div class="filters" role="group" aria-label={t('projects.filterLabel')} data-filters>
+        <button type="button" class="filter" data-filter="all" aria-pressed="true">
+          {t('projects.all')} <span class="filter__count mono">{projects.length}</span>
+        </button>
+        {
+          cats.map((id) => (
+            <button type="button" class="filter" data-filter={id} aria-pressed="false">
+              {categoryLabel(id, lang)} <span class="filter__count mono">{countFor(id)}</span>
+            </button>
+          ))
+        }
+      </div>
+      <p class="gallery__status mono" role="status" aria-live="polite" data-status>
+        {t('projects.showing', { n: projects.length })}
+      </p>
+
+      <ul class="grid grid--3 gallery__grid" data-grid>
+        {
+          projects.map((p, i) => (
+            <li data-category={p.data.category}>
+              <ProjectCard project={p} lang={lang} headingLevel="h2" loading={i < 3 ? 'eager' : 'lazy'} />
+            </li>
+          ))
+        }
+      </ul>
+      <p class="gallery__empty" data-empty hidden>{t('projects.empty')}</p>
+    </div>
+  </section>
+
+  <CtaBand lang={lang} />
+</BaseLayout>
+
+<style>
+  .filters {
+    display: none;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-bottom: var(--space-4);
+  }
+
+  /* Filters need JavaScript; without it every project is simply listed. */
+  :global(.js) .filters {
+    display: flex;
+  }
+
+  .filter {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: 2.75rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--c-line-2);
+    border-radius: 999px;
+    background: var(--c-white);
+    color: var(--c-ink);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s var(--ease), border-color 0.2s var(--ease), color 0.2s var(--ease);
+  }
+
+  .filter:hover {
+    border-color: var(--c-ink);
+  }
+
+  .filter[aria-pressed='true'] {
+    background: var(--c-ink);
+    border-color: var(--c-ink);
+    color: var(--c-paper);
+  }
+
+  .filter__count {
+    font-size: var(--fs-xs);
+    font-weight: 500;
+    opacity: 0.75;
+  }
+
+  .gallery__status {
+    margin-bottom: var(--space-6);
+    font-size: var(--fs-xs);
+    color: var(--c-muted);
+  }
+
+  .gallery__grid {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .gallery__grid > li {
+    display: flex;
+  }
+
+  .gallery__grid > li > :global(*) {
+    flex: 1;
+  }
+
+  .gallery__grid > li[hidden] {
+    display: none;
+  }
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-gallery]');
+  if (root) {
+    const buttons = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-filter]'));
+    const items = Array.from(root.querySelectorAll<HTMLElement>('[data-grid] > li'));
+    const status = root.querySelector<HTMLElement>('[data-status]');
+    const empty = root.querySelector<HTMLElement>('[data-empty]');
+    const template = root.dataset.showingTemplate ?? '{n}';
+    const valid = new Set(buttons.map((b) => b.dataset.filter));
+
+    const apply = (filter: string, updateUrl: boolean) => {
+      const active = valid.has(filter) ? filter : 'all';
+      let shown = 0;
+      for (const item of items) {
+        const match = active === 'all' || item.dataset.category === active;
+        item.hidden = !match;
+        if (match) shown++;
+      }
+      for (const button of buttons) {
+        button.setAttribute('aria-pressed', String(button.dataset.filter === active));
+      }
+      if (status) status.textContent = template.replace('{n}', String(shown));
+      if (empty) empty.hidden = shown > 0;
+
+      if (updateUrl) {
+        const next = new URL(window.location.href);
+        if (active === 'all') next.searchParams.delete('category');
+        else next.searchParams.set('category', active);
+        history.replaceState(null, '', next);
+      }
+    };
+
+    buttons.forEach((button) =>
+      button.addEventListener('click', () => apply(button.dataset.filter ?? 'all', true)),
+    );
+
+    // Restore the category from the URL (e.g. when returning from a project page).
+    const initial = new URLSearchParams(window.location.search).get('category') ?? 'all';
+    apply(initial, false);
+  }
+</script>

@@ -1,0 +1,580 @@
+---
+/**
+ * Quotation request form.
+ *
+ * GitHub Pages has no backend, so the form posts to an external form service
+ * configured with PUBLIC_FORM_ENDPOINT (Formspree by default; any service that
+ * accepts a multipart POST and answers JSON with a 2xx status works).
+ *
+ * - Success is shown ONLY after the service confirms receipt (HTTP 2xx).
+ * - Without an endpoint the form is shown disabled with an explanation.
+ * - Without JavaScript the browser posts the form directly to the service.
+ * - Spam: honeypot field "_gotcha" + the provider's own filtering.
+ */
+import type { Lang } from '../i18n/ui';
+import { localePath, useTranslations } from '../i18n/utils';
+import { url } from '../lib/url';
+import type { Service } from '../lib/content';
+import { FORM_ENDPOINT } from '../data/site';
+import { company } from '../data/company';
+import Icon from './Icon.astro';
+
+interface Props {
+  lang: Lang;
+  services: Service[];
+}
+
+const { lang, services } = Astro.props;
+const t = useTranslations(lang);
+const enabled = FORM_ENDPOINT !== '';
+const MIN_MESSAGE = 20;
+
+const messages = {
+  required: t('form.err.required'),
+  email: t('form.err.email'),
+  phone: t('form.err.phone'),
+  tooShort: t('form.err.tooShort', { n: MIN_MESSAGE }),
+  consent: t('form.err.consent'),
+  invalid: t('form.invalid'),
+  sending: t('form.sending'),
+  network: t('form.error.network'),
+  errorTitle: t('form.error.title'),
+  errorText: t('form.error.text'),
+};
+---
+
+<div class="quote" id="quote">
+  <h2 class="quote__title">{t('form.title')}</h2>
+
+  {
+    !enabled && (
+      <div class="notice notice--warn" role="note">
+        <Icon name="alert" />
+        <div>
+          <p class="notice__title">{t('form.notConfigured.title')}</p>
+          <p>{t('form.notConfigured.text')}</p>
+        </div>
+      </div>
+    )
+  }
+
+  <form
+    class="quote__form"
+    action={enabled ? FORM_ENDPOINT : undefined}
+    method="post"
+    data-quote-form
+    data-messages={JSON.stringify(messages)}
+    data-min-message={MIN_MESSAGE}
+  >
+    <p class="quote__intro">{t('form.intro')}</p>
+
+    <div class="quote__alert" data-form-alert role="alert" hidden></div>
+
+    <fieldset disabled={!enabled}>
+      <legend class="visually-hidden">{t('form.title')}</legend>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="qf-name">{t('form.name')} <span aria-hidden="true">*</span></label>
+          <input id="qf-name" name="name" type="text" autocomplete="name" required minlength="2" maxlength="120" />
+          <p class="field__error" id="qf-name-error" hidden></p>
+        </div>
+        <div class="field">
+          <label for="qf-company">{t('form.company')} <span class="field__opt">({t('form.optional')})</span></label>
+          <input id="qf-company" name="company" type="text" autocomplete="organization" maxlength="160" />
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="qf-email">{t('form.email')} <span aria-hidden="true">*</span></label>
+          <input id="qf-email" name="email" type="email" autocomplete="email" inputmode="email" required maxlength="160" />
+          <p class="field__error" id="qf-email-error" hidden></p>
+        </div>
+        <div class="field">
+          <label for="qf-phone">{t('form.phone')} <span aria-hidden="true">*</span></label>
+          <input
+            id="qf-phone"
+            name="phone"
+            type="tel"
+            autocomplete="tel"
+            inputmode="tel"
+            required
+            pattern="[+0-9()\-\s]{6,24}"
+            maxlength="24"
+          />
+          <p class="field__error" id="qf-phone-error" hidden></p>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="qf-service">{t('form.service')} <span aria-hidden="true">*</span></label>
+          <select id="qf-service" name="service" required>
+            <option value="">{t('form.servicePick')}</option>
+            {services.map((s) => <option value={s.data.title[lang]} data-id={s.id}>{s.data.title[lang]}</option>)}
+            <option value={t('form.serviceOther')}>{t('form.serviceOther')}</option>
+          </select>
+          <p class="field__error" id="qf-service-error" hidden></p>
+        </div>
+        <div class="field">
+          <label for="qf-location">{t('form.location')} <span class="field__opt">({t('form.optional')})</span></label>
+          <input id="qf-location" name="location" type="text" autocomplete="address-level2" maxlength="120" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="qf-message">{t('form.message')} <span aria-hidden="true">*</span></label>
+        <p class="field__hint" id="qf-message-hint">{t('form.messageHint')}</p>
+        <textarea
+          id="qf-message"
+          name="message"
+          rows="6"
+          required
+          minlength={MIN_MESSAGE}
+          maxlength="5000"
+          aria-describedby="qf-message-hint"></textarea>
+        <p class="field__error" id="qf-message-error" hidden></p>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="qf-dimensions">{t('form.dimensions')} <span class="field__opt">({t('form.optional')})</span></label>
+          <p class="field__hint" id="qf-dimensions-hint">{t('form.dimensionsHint')}</p>
+          <input id="qf-dimensions" name="dimensions" type="text" maxlength="300" aria-describedby="qf-dimensions-hint" />
+        </div>
+        <div class="field">
+          <label for="qf-timeframe">{t('form.timeframe')} <span class="field__opt">({t('form.optional')})</span></label>
+          <p class="field__hint field__hint--spacer" aria-hidden="true">&nbsp;</p>
+          <select id="qf-timeframe" name="timeframe">
+            <option value="">{t('form.servicePick')}</option>
+            <option>{t('form.timeframe.asap')}</option>
+            <option>{t('form.timeframe.1-3')}</option>
+            <option>{t('form.timeframe.3plus')}</option>
+            <option>{t('form.timeframe.flexible')}</option>
+          </select>
+        </div>
+      </div>
+
+      <p class="quote__files">
+        <Icon name="camera" size={18} />
+        <span>{t('form.files')}</span>
+      </p>
+
+      <div class="field field--check">
+        <input id="qf-consent" name="consent" type="checkbox" value="yes" required />
+        <label for="qf-consent">
+          {t('form.consent')}{' '}
+          <a href={url(localePath(lang, 'privacy'))} target="_blank">{t('form.consentLink')}</a>.{' '}
+          <span aria-hidden="true">*</span>
+        </label>
+        <p class="field__error" id="qf-consent-error" hidden></p>
+      </div>
+
+      <!-- Honeypot: hidden from people, tempting for bots. -->
+      <div class="hp" aria-hidden="true">
+        <label for="qf-gotcha">Leave this field empty</label>
+        <input id="qf-gotcha" name="_gotcha" type="text" tabindex="-1" autocomplete="off" />
+      </div>
+
+      <input type="hidden" name="_subject" value={`${lang === 'bg' ? 'Запитване от сайта' : 'Website enquiry'} — ${company.brand[lang]}`} />
+      <input type="hidden" name="language" value={lang} />
+      <input type="hidden" name="project" value="" data-project-field />
+
+      <button class="btn quote__submit" type="submit" data-submit>
+        <span data-submit-label>{t('form.submit')}</span>
+        <Icon name="arrow-right" />
+      </button>
+    </fieldset>
+  </form>
+
+  <div class="quote__success" data-form-success hidden tabindex="-1">
+    <Icon name="check" size={40} strokeWidth={2} />
+    <h3>{t('form.success.title')}</h3>
+    <p>{t('form.success.text')}</p>
+  </div>
+</div>
+
+<style>
+  .quote {
+    padding: clamp(1.25rem, 0.75rem + 2vw, 2.5rem);
+    background: var(--c-white);
+    border: 1px solid var(--c-line);
+    border-top: 4px solid var(--c-accent);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-1);
+  }
+
+  .quote__title {
+    font-size: var(--fs-h3);
+    margin-bottom: var(--space-2);
+  }
+
+  .quote__intro {
+    font-size: var(--fs-sm);
+    color: var(--c-muted);
+  }
+
+  .quote fieldset {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    min-width: 0;
+  }
+
+  .quote fieldset:disabled {
+    opacity: 0.6;
+  }
+
+  .field-row {
+    display: grid;
+    gap: 0 var(--space-5);
+  }
+
+  @media (min-width: 40em) {
+    .field-row {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: var(--space-5);
+    min-width: 0;
+  }
+
+  .field label {
+    margin-bottom: var(--space-2);
+    font-weight: 700;
+    font-size: var(--fs-sm);
+  }
+
+  .field__opt {
+    font-weight: 400;
+    color: var(--c-muted);
+  }
+
+  .field__hint {
+    margin: -0.25rem 0 var(--space-2);
+    font-size: var(--fs-xs);
+    color: var(--c-muted);
+  }
+
+  @media (max-width: 39.99em) {
+    .field__hint--spacer {
+      display: none;
+    }
+  }
+
+  .field input:not([type='checkbox']),
+  .field select,
+  .field textarea {
+    width: 100%;
+    min-height: 3rem;
+    padding: 0.7rem 0.85rem;
+    border: 1px solid #8e959c;
+    border-radius: var(--radius);
+    background: var(--c-white);
+    font-size: 1rem; /* ≥16px avoids zoom-on-focus on iOS */
+    line-height: 1.4;
+    transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease);
+  }
+
+  .field textarea {
+    resize: vertical;
+    min-height: 9rem;
+  }
+
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus {
+    outline: none;
+    border-color: var(--c-ink);
+    box-shadow: 0 0 0 3px rgb(232 117 50 / 0.35);
+  }
+
+  .field [aria-invalid='true'] {
+    border-color: var(--c-error);
+    box-shadow: 0 0 0 1px var(--c-error);
+  }
+
+  .field__error {
+    margin: var(--space-2) 0 0;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--c-error);
+  }
+
+  .field--check {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: var(--space-3);
+    align-items: start;
+  }
+
+  .field--check input {
+    width: 1.375rem;
+    height: 1.375rem;
+    margin: 0.1rem 0 0;
+    accent-color: var(--c-ink);
+  }
+
+  .field--check label {
+    margin: 0;
+    font-weight: 400;
+  }
+
+  .field--check .field__error {
+    grid-column: 2;
+  }
+
+  .quote__files {
+    display: flex;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    background: var(--c-paper);
+    border-radius: var(--radius);
+    font-size: var(--fs-sm);
+    color: var(--c-muted);
+  }
+
+  .quote__files :global(svg) {
+    flex: none;
+    margin-top: 0.15rem;
+    color: var(--c-accent-ink);
+  }
+
+  .quote__submit {
+    width: 100%;
+    min-height: 3.25rem;
+    font-size: var(--fs-base);
+  }
+
+  @media (min-width: 40em) {
+    .quote__submit {
+      width: auto;
+    }
+  }
+
+  .hp {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .notice {
+    display: flex;
+    gap: var(--space-3);
+    margin: var(--space-4) 0 var(--space-5);
+    padding: var(--space-4);
+    border-radius: var(--radius);
+    font-size: var(--fs-sm);
+  }
+
+  .notice :global(svg) {
+    flex: none;
+  }
+
+  .notice p {
+    margin: 0;
+  }
+
+  .notice__title {
+    font-weight: 700;
+  }
+
+  .notice--warn {
+    background: #fff4ec;
+    border: 1px solid #f3c3a3;
+    color: #6b2c0c;
+  }
+
+  .quote__alert {
+    margin-bottom: var(--space-5);
+    padding: var(--space-4);
+    border-radius: var(--radius);
+    background: #fdecea;
+    border: 1px solid #f1b3ad;
+    color: #7a1a12;
+    font-size: var(--fs-sm);
+  }
+
+  .quote__alert :global(strong) {
+    display: block;
+  }
+
+  .quote__success {
+    padding: var(--space-6) 0;
+    text-align: center;
+  }
+
+  .quote__success :global(svg) {
+    margin: 0 auto var(--space-4);
+    padding: 0.5rem;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 999px;
+    background: #e3f2e9;
+    color: var(--c-success);
+  }
+
+  .quote__success:focus {
+    outline: none;
+  }
+</style>
+
+<script>
+  type Messages = Record<
+    'required' | 'email' | 'phone' | 'tooShort' | 'consent' | 'invalid' | 'sending' | 'network' | 'errorTitle' | 'errorText',
+    string
+  >;
+
+  const form = document.querySelector<HTMLFormElement>('[data-quote-form]');
+
+  if (form) {
+    const messages: Messages = JSON.parse(form.dataset.messages ?? '{}');
+    const minMessage = Number(form.dataset.minMessage ?? 20);
+    const alertBox = form.querySelector<HTMLElement>('[data-form-alert]')!;
+    const submit = form.querySelector<HTMLButtonElement>('[data-submit]')!;
+    const submitLabel = form.querySelector<HTMLElement>('[data-submit-label]')!;
+    const success = document.querySelector<HTMLElement>('[data-form-success]')!;
+    const defaultLabel = submitLabel.textContent ?? '';
+
+    // Pre-fill from links such as /contact/?service=railings&project=inox-railings
+    const params = new URLSearchParams(window.location.search);
+    const serviceId = params.get('service');
+    const select = form.querySelector<HTMLSelectElement>('#qf-service');
+    if (serviceId && select) {
+      const option = Array.from(select.options).find((o) => o.dataset.id === serviceId);
+      if (option) select.value = option.value;
+    }
+    const projectId = params.get('project');
+    const projectField = form.querySelector<HTMLInputElement>('[data-project-field]');
+    if (projectId && projectField) projectField.value = projectId.replace(/[^a-z0-9-]/gi, '').slice(0, 80);
+
+    // We validate ourselves so the messages are in the page language.
+    form.noValidate = true;
+
+    const fields = Array.from(form.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>('input, select, textarea')).filter(
+      (el) => el.id && el.type !== 'hidden' && el.name !== '_gotcha',
+    );
+
+    const errorFor = (el: Element) => form.querySelector<HTMLElement>(`#${el.id}-error`);
+
+    const validate = (el: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement): string => {
+      const value = el.value.trim();
+      if (el instanceof HTMLInputElement && el.type === 'checkbox') return el.required && !el.checked ? messages.consent : '';
+      if (el.required && !value) return messages.required;
+      if (!value) return '';
+      if (el.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value)) return messages.email;
+      if (el.type === 'tel' && !/^[+0-9()\-\s]{6,24}$/.test(value)) return messages.phone;
+      if (el.name === 'message' && value.length < minMessage) return messages.tooShort;
+      return '';
+    };
+
+    const showError = (el: HTMLElement, message: string) => {
+      const box = errorFor(el);
+      if (!box) return;
+      const describedBy = (el.getAttribute('aria-describedby') ?? '').split(' ').filter((id) => id && id !== box.id);
+      if (message) {
+        el.setAttribute('aria-invalid', 'true');
+        box.textContent = message;
+        box.hidden = false;
+        describedBy.push(box.id);
+      } else {
+        el.removeAttribute('aria-invalid');
+        box.textContent = '';
+        box.hidden = true;
+      }
+      if (describedBy.length) el.setAttribute('aria-describedby', describedBy.join(' '));
+      else el.removeAttribute('aria-describedby');
+    };
+
+    // Re-validate a field once the user has interacted with it.
+    fields.forEach((el) => {
+      const handler = () => {
+        if (el.getAttribute('aria-invalid') === 'true') showError(el, validate(el));
+      };
+      el.addEventListener('input', handler);
+      el.addEventListener('change', handler);
+      el.addEventListener('blur', () => {
+        if (el.value.trim() || el.getAttribute('aria-invalid') === 'true') showError(el, validate(el));
+      });
+    });
+
+    const showAlert = (html: string) => {
+      alertBox.innerHTML = html;
+      alertBox.hidden = false;
+    };
+
+    const escapeHtml = (s: string) =>
+      s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c] ?? c);
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      alertBox.hidden = true;
+
+      let firstInvalid: HTMLElement | null = null;
+      for (const el of fields) {
+        const message = validate(el);
+        showError(el, message);
+        if (message && !firstInvalid) firstInvalid = el;
+      }
+      if (firstInvalid) {
+        showAlert(escapeHtml(messages.invalid));
+        firstInvalid.focus();
+        return;
+      }
+
+      const endpoint = form.getAttribute('action');
+      if (!endpoint) return; // Not configured: the form is disabled and explains why.
+
+      submit.disabled = true;
+      submit.setAttribute('aria-busy', 'true');
+      submitLabel.textContent = messages.sending;
+
+      const controller = new AbortController();
+      const timer = window.setTimeout(() => controller.abort(), 20000);
+
+      try {
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { Accept: 'application/json' },
+          signal: controller.signal,
+        });
+
+        if (response.ok) {
+          form.hidden = true;
+          success.hidden = false;
+          success.focus();
+          success.scrollIntoView({ block: 'center' });
+          return;
+        }
+
+        // Provider-side validation errors (e.g. Formspree returns { errors: [{ message }] }).
+        let detail = '';
+        try {
+          const data = await response.json();
+          if (Array.isArray(data?.errors)) detail = data.errors.map((e: { message?: string }) => e.message).filter(Boolean).join(' ');
+        } catch {
+          /* response was not JSON */
+        }
+        showAlert(`<strong>${escapeHtml(messages.errorTitle)}</strong> ${escapeHtml(detail || messages.errorText)}`);
+      } catch {
+        showAlert(`<strong>${escapeHtml(messages.errorTitle)}</strong> ${escapeHtml(messages.network)}`);
+      } finally {
+        window.clearTimeout(timer);
+        submit.disabled = false;
+        submit.removeAttribute('aria-busy');
+        submitLabel.textContent = defaultLabel;
+        if (!alertBox.hidden) alertBox.focus();
+      }
+    });
+
+    alertBox.tabIndex = -1;
+  }
+</script>

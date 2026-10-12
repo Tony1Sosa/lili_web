@@ -1,0 +1,116 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import ContactDetails from '../../components/ContactDetails.astro';
+import QuoteForm from '../../components/QuoteForm.astro';
+import type { Lang } from '../../i18n/ui';
+import { langPaths, localePath, useTranslations } from '../../i18n/utils';
+import { getServices } from '../../lib/content';
+import { breadcrumbJsonLd, organizationJsonLd } from '../../lib/seo';
+
+export const getStaticPaths = langPaths;
+
+const lang = Astro.params.lang as Lang;
+const t = useTranslations(lang);
+const services = await getServices();
+
+const copy = {
+  bg: {
+    description: 'Изпратете запитване за оферта за парапети, стълби, козирки, врати, огради или метални конструкции. Производствена база в София.',
+    lead: 'Изпратете запитване за оферта или се свържете с нас директно. Отговаряме в работно време.',
+    detailsTitle: 'Данни за контакт',
+    tipsTitle: 'За по-точна оферта',
+    tips: [
+      'Какво трябва да бъде изработено и за какъв обект',
+      'Приблизителни размери — дължина, височина, брой',
+      'Желан материал и покритие (инокс, черен метал, RAL цвят…)',
+      'Населено място на обекта — за доставка и монтаж',
+      'Чертеж или снимки на мястото, ако имате',
+    ],
+  },
+  en: {
+    description: 'Send a quotation request for railings, stairs, canopies, doors, fences or metal structures. Workshop in Sofia, Bulgaria.',
+    lead: 'Send us a quotation request or contact us directly. We reply during working hours.',
+    detailsTitle: 'Contact details',
+    tipsTitle: 'For a more accurate quotation',
+    tips: [
+      'What needs to be made and for what kind of building',
+      'Approximate dimensions — length, height, quantity',
+      'Preferred material and finish (stainless steel, black steel, RAL colour…)',
+      'Location of the site — for delivery and installation',
+      'Drawings or photos of the site, if you have them',
+    ],
+  },
+}[lang];
+
+const title = t('nav.contact');
+const jsonLd = [
+  organizationJsonLd(lang, Astro.site),
+  breadcrumbJsonLd(lang, [], { label: title, href: localePath(lang, 'contact') }, Astro.site),
+];
+---
+
+<BaseLayout lang={lang} title={title} description={copy.description} jsonLd={jsonLd}>
+  <PageHeader lang={lang} title={title} lead={copy.lead} />
+
+  <section class="section">
+    <div class="container contact">
+      <div class="contact-card on-dark">
+        <h2>{copy.detailsTitle}</h2>
+        <ContactDetails lang={lang} />
+      </div>
+      <div class="contact__form">
+        <QuoteForm lang={lang} services={services} />
+      </div>
+      <div class="tips">
+        <h2>{copy.tipsTitle}</h2>
+        <ul class="checklist">
+          {copy.tips.map((tip) => <li>{tip}</li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* Mobile: contact details, form, tips. Desktop: form left; details and tips right. */
+  .contact {
+    display: grid;
+    gap: var(--space-6);
+    grid-template-areas: 'card' 'form' 'tips';
+    align-items: start;
+  }
+
+  .contact-card { grid-area: card; }
+  .contact__form { grid-area: form; }
+  .tips { grid-area: tips; }
+
+  @media (min-width: 64em) {
+    .contact {
+      grid-template-columns: minmax(0, 1fr) 22rem;
+      grid-template-rows: auto 1fr;
+      grid-template-areas: 'form card' 'form tips';
+      column-gap: var(--space-7);
+    }
+  }
+
+  .contact-card {
+    padding: var(--space-6);
+    background: var(--c-ink);
+    color: var(--c-paper);
+    border-radius: var(--radius);
+  }
+
+  .contact-card h2,
+  .tips h2 {
+    font-size: var(--fs-h4);
+  }
+
+  .tips {
+    padding: var(--space-6);
+    border: 1px solid var(--c-line);
+    border-radius: var(--radius);
+    background: var(--c-white);
+    font-size: var(--fs-sm);
+  }
+</style>

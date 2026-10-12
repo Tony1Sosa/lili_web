@@ -1,0 +1,35 @@
+{
+  "order": 7,
+  "icon": "custom",
+  "title": { "bg": "Нестандартни метални изделия", "en": "Custom metal fabrication" },
+  "summary": {
+    "bg": "Изделия по чертеж или идея на клиента — от метални мебели до прикачен инвентар за тежка механизация.",
+    "en": "Products made to the customer’s drawing or idea — from metal furniture to attachments for heavy machinery."
+  },
+  "intro": {
+    "bg": "Когато стандартно решение не съществува, го изработваме. Произвеждаме нестандартни метални изделия по чертеж, скица или техническо задание — включително метални мебели и прикачен инвентар за тежка механизация.",
+    "en": "When there is no standard solution, we make one. We produce custom metal products from drawings, sketches or a technical brief — including metal furniture and attachments for heavy machinery."
+  },
+  "includes": {
+    "bg": [
+      "Изделия по чертеж, скица или техническо задание",
+      "Метални мебели",
+      "Прикачен инвентар за тежка механизация",
+      "Производство по поръчка за фирми"
+    ],
+    "en": [
+      "Products made to drawings, sketches or a technical brief",
+      "Metal furniture",
+      "Attachments for heavy machinery",
+      "Contract manufacturing for businesses"
+    ]
+  },
+  "materials": {
+    "bg": ["Черен метал", "Неръждаема стомана", "Алуминий"],
+    "en": ["Black steel", "Stainless steel", "Aluminium"]
+  },
+  "seoDescription": {
+    "bg": "Нестандартни метални изделия по чертеж — метални мебели, прикачен инвентар за тежка механизация и производство по поръчка.",
+    "en": "Custom metal products made to drawings — metal furniture, attachments for heavy machinery and contract manufacturing."
+  }
+}

@@ -1,0 +1,44 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHeader from '../../../components/PageHeader.astro';
+import ServiceCard from '../../../components/ServiceCard.astro';
+import CtaBand from '../../../components/CtaBand.astro';
+import type { Lang } from '../../../i18n/ui';
+import { langPaths, localePath, useTranslations } from '../../../i18n/utils';
+import { getServices } from '../../../lib/content';
+import { breadcrumbJsonLd } from '../../../lib/seo';
+
+export const getStaticPaths = langPaths;
+
+const lang = Astro.params.lang as Lang;
+const t = useTranslations(lang);
+const services = await getServices();
+
+const copy = {
+  bg: {
+    lead: 'Изработваме и монтираме метални изделия за жилищни, търговски и индустриални обекти — по каталог или по индивидуален проект. Изберете направление, за да видите какво предлагаме.',
+    description:
+      'Парапети, метални стълби, козирки, пожароустойчиви врати, огради, метални конструкции, нестандартни изделия, прахово боядисване и металообработка.',
+  },
+  en: {
+    lead: 'We fabricate and install metalwork for residential, commercial and industrial buildings — from our catalogue or to an individual design. Choose a product line to see what we offer.',
+    description:
+      'Railings, metal stairs, canopies, fire-resistant doors, fences, metal structures, custom fabrication, powder coating and metalworking services.',
+  },
+}[lang];
+
+const title = t('nav.products');
+const jsonLd = [breadcrumbJsonLd(lang, [], { label: title, href: localePath(lang, 'products') }, Astro.site)];
+---
+
+<BaseLayout lang={lang} title={title} description={copy.description} jsonLd={jsonLd}>
+  <PageHeader lang={lang} title={title} lead={copy.lead} />
+
+  <section class="section">
+    <div class="container grid grid--3">
+      {services.map((s, i) => <ServiceCard service={s} lang={lang} index={i} headingLevel="h2" />)}
+    </div>
+  </section>
+
+  <CtaBand lang={lang} />
+</BaseLayout>

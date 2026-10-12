@@ -1,0 +1,169 @@
+---
+/**
+ * Privacy notice. DRAFT: written for what this website actually does (no cookies,
+ * no analytics, an external form service). The company should review it, fill in
+ * the placeholders and adjust it if the form provider or retention period changes.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import type { Lang } from '../../i18n/ui';
+import { langPaths, localePath, useTranslations } from '../../i18n/utils';
+import { company } from '../../data/company';
+import { breadcrumbJsonLd } from '../../lib/seo';
+
+export const getStaticPaths = langPaths;
+
+const lang = Astro.params.lang as Lang;
+const t = useTranslations(lang);
+const c = company.contact;
+const uic = company.legal.uic;
+const address = company.legal.registeredAddress?.[lang] ?? c.address?.[lang] ?? null;
+const updated = lang === 'bg' ? '12.10.2026 г.' : '12 October 2026';
+const title = t('nav.privacy');
+const description =
+  lang === 'bg'
+    ? 'Как обработваме личните данни, които изпращате чрез формата за запитване. Сайтът не използва бисквитки и инструменти за проследяване.'
+    : 'How we process the personal data you send through the enquiry form. This website uses no cookies or tracking tools.';
+const jsonLd = [breadcrumbJsonLd(lang, [], { label: title, href: localePath(lang, 'privacy') }, Astro.site)];
+---
+
+<BaseLayout lang={lang} title={title} description={description} jsonLd={jsonLd}>
+  <PageHeader lang={lang} title={title} />
+
+  <section class="section">
+    <div class="container prose">
+      {
+        lang === 'bg' ? (
+          <>
+            <p>
+              Последна актуализация: <span class="mono">{updated}</span>
+            </p>
+
+            <h2>1. Администратор на лични данни</h2>
+            <p>
+              {company.legalName.bg}, ЕИК {uic ?? <span class="placeholder-value">[ЕИК]</span>}, адрес:{' '}
+              {address ?? <span class="placeholder-value">[адрес]</span>}, имейл:{' '}
+              {c.email ? <a href={`mailto:${c.email}`}>{c.email}</a> : <span class="placeholder-value">[имейл]</span>}.
+            </p>
+
+            <h2>2. Какви данни събираме</h2>
+            <p>
+              Когато изпратите запитване чрез формата на сайта, обработваме данните, които сте въвели: име, фирма (по
+              желание), имейл, телефон, населено място (по желание), описание на проекта, размери и желан срок. Не
+              изискваме и молим да не изпращате специални категории лични данни.
+            </p>
+
+            <h2>3. Цел и правно основание</h2>
+            <p>
+              Използваме данните единствено, за да отговорим на запитването ви и да подготвим оферта — предприемане на
+              стъпки по ваше искане преди сключване на договор (чл. 6, пар. 1, буква „б“ от Регламент (ЕС) 2016/679 —
+              ОРЗД) и въз основа на вашето съгласие (чл. 6, пар. 1, буква „а“ от ОРЗД), което можете да оттеглите по
+              всяко време.
+            </p>
+
+            <h2>4. Получатели и обработващи</h2>
+            <ul>
+              <li>
+                Формата за запитване се обработва от външна услуга за формуляри (Formspree, Inc.), която препраща
+                съобщението до нашата пощенска кутия.
+              </li>
+              <li>
+                Сайтът се хоства в GitHub Pages (GitHub, Inc.). Хостинг доставчикът може да записва технически данни,
+                като IP адрес, в сървърни журнали с цел сигурност.
+              </li>
+            </ul>
+            <p>
+              Тези доставчици могат да обработват данни извън Европейското икономическо пространство. Предаването се
+              извършва въз основа на подходящи гаранции съгласно глава V от ОРЗД. Не продаваме и не предоставяме
+              данните ви на трети лица за маркетинг.
+            </p>
+
+            <h2>5. Срок на съхранение</h2>
+            <p>
+              Съхраняваме запитванията толкова, колкото е необходимо за отговор и за евентуално последващо изпълнение
+              на поръчка, но не повече от <span class="placeholder-value">[срок, напр. 24 месеца]</span>, освен ако
+              закон не изисква по-дълъг срок.
+            </p>
+
+            <h2>6. Бисквитки и проследяване</h2>
+            <p>
+              Сайтът не използва бисквитки, аналитични, рекламни или други инструменти за проследяване. Ако сами
+              превключите езика, изборът ви се запомня в локалното хранилище на браузъра (localStorage), за да ви
+              показваме същия език при следващо посещение. Можете да го изтриете от настройките на браузъра.
+            </p>
+
+            <h2>7. Вашите права</h2>
+            <p>
+              Имате право на достъп, коригиране, изтриване и ограничаване на обработването на данните си, право на
+              преносимост, право на възражение и право да оттеглите съгласието си. За упражняване на правата си се
+              свържете с нас на посочения по-горе имейл. Имате право да подадете жалба до Комисията за защита на
+              личните данни (<a href="https://www.cpdp.bg/" rel="noopener">www.cpdp.bg</a>).
+            </p>
+          </>
+        ) : (
+          <>
+            <p>
+              Last updated: <span class="mono">{updated}</span>
+            </p>
+
+            <h2>1. Data controller</h2>
+            <p>
+              {company.legalName.en}, UIC {uic ?? <span class="placeholder-value">[UIC]</span>}, address:{' '}
+              {address ?? <span class="placeholder-value">[address]</span>}, email:{' '}
+              {c.email ? <a href={`mailto:${c.email}`}>{c.email}</a> : <span class="placeholder-value">[email]</span>}.
+            </p>
+
+            <h2>2. What data we collect</h2>
+            <p>
+              When you send an enquiry through the website form, we process the details you enter: name, company
+              (optional), email, phone, town/city (optional), project description, dimensions and desired timeframe. We
+              do not ask for — and ask you not to send — special categories of personal data.
+            </p>
+
+            <h2>3. Purpose and legal basis</h2>
+            <p>
+              We use your data only to reply to your enquiry and prepare a quotation — taking steps at your request
+              before entering into a contract (Art. 6(1)(b) of Regulation (EU) 2016/679, GDPR) and on the basis of your
+              consent (Art. 6(1)(a) GDPR), which you may withdraw at any time.
+            </p>
+
+            <h2>4. Recipients and processors</h2>
+            <ul>
+              <li>The enquiry form is processed by an external form service (Formspree, Inc.), which forwards the message to our mailbox.</li>
+              <li>
+                The website is hosted on GitHub Pages (GitHub, Inc.). The hosting provider may record technical data,
+                such as IP addresses, in server logs for security purposes.
+              </li>
+            </ul>
+            <p>
+              These providers may process data outside the European Economic Area. Such transfers rely on appropriate
+              safeguards under Chapter V of the GDPR. We do not sell your data or share it with third parties for
+              marketing.
+            </p>
+
+            <h2>5. Retention</h2>
+            <p>
+              We keep enquiries for as long as needed to reply and to fulfil any resulting order, but no longer than{' '}
+              <span class="placeholder-value">[period, e.g. 24 months]</span>, unless the law requires a longer period.
+            </p>
+
+            <h2>6. Cookies and tracking</h2>
+            <p>
+              This website uses no cookies and no analytics, advertising or other tracking tools. If you switch the
+              language yourself, your choice is remembered in your browser’s local storage (localStorage) so we can show
+              the same language on your next visit. You can delete it in your browser settings.
+            </p>
+
+            <h2>7. Your rights</h2>
+            <p>
+              You have the right to access, rectify, erase and restrict the processing of your data, the right to data
+              portability, the right to object and the right to withdraw consent. To exercise your rights, contact us at
+              the email above. You also have the right to lodge a complaint with the Bulgarian Commission for Personal
+              Data Protection (<a href="https://www.cpdp.bg/" rel="noopener">www.cpdp.bg</a>).
+            </p>
+          </>
+        )
+      }
+    </div>
+  </section>
+</BaseLayout>

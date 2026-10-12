@@ -1,0 +1,16 @@
+{
+  "status": "draft",
+  "order": 140,
+  "featured": false,
+  "category": "custom",
+  "services": ["custom-fabrication"],
+  "title": { "bg": "Производство за партньори в чужбина", "en": "Manufacturing for partners abroad" },
+  "summary": {
+    "bg": "ЧЕРНОВА — очаква потвърждение (виж docs/FACTS-TO-CONFIRM.md, т. 12).",
+    "en": "DRAFT — awaiting confirmation (see docs/FACTS-TO-CONFIRM.md, item 12)."
+  },
+  "legacy": {
+    "urls": [],
+    "images": []
+  }
+}

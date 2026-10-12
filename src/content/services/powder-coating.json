@@ -1,0 +1,21 @@
+{
+  "order": 8,
+  "icon": "powder",
+  "title": { "bg": "Прахово боядисване", "en": "Powder coating" },
+  "summary": {
+    "bg": "Прахово боядисване на детайли с дължина до 7500 мм в цветове по каталог RAL.",
+    "en": "Powder coating of parts up to 7500 mm long in RAL catalogue colours."
+  },
+  "intro": {
+    "bg": "Прахово боядисваме както собствените си изделия, така и детайли, предоставени от клиенти. Максималната дължина на детайла е 7500 мм, а цветовете са по каталог RAL.",
+    "en": "We powder-coat both our own products and parts supplied by customers. The maximum part length is 7500 mm, and colours follow the RAL catalogue."
+  },
+  "includes": {
+    "bg": ["Детайли с дължина до 7500 мм", "Широка гама цветове по каталог RAL", "Боядисване на собствени изделия и на детайли на клиенти"],
+    "en": ["Parts up to 7500 mm long", "A wide range of RAL catalogue colours", "Coating of our own products and of customers’ parts"]
+  },
+  "seoDescription": {
+    "bg": "Прахово боядисване в София — детайли до 7500 мм, цветове по RAL каталог.",
+    "en": "Powder coating in Sofia — parts up to 7500 mm long, RAL catalogue colours."
+  }
+}

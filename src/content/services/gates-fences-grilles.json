@@ -1,0 +1,37 @@
+{
+  "order": 5,
+  "icon": "fence",
+  "title": { "bg": "Врати, огради и решетки", "en": "Gates, fences & grilles" },
+  "summary": {
+    "bg": "Плътни и ажурни метални огради, порти, гаражни врати и решетки за прозорци и врати.",
+    "en": "Solid and open-pattern metal fences, gates, garage doors and window and door grilles."
+  },
+  "intro": {
+    "bg": "Изработваме метални огради — плътни от стоманена ламарина или ажурни от метални профили — порти и гаражни врати, както и решетки за прозорци и врати.",
+    "en": "We make metal fences — solid from sheet steel or open-pattern from metal profiles — gates and garage doors, as well as grilles for windows and doors."
+  },
+  "includes": {
+    "bg": [
+      "Плътни огради от стоманена ламарина",
+      "Ажурни огради от метални профили",
+      "Порти и гаражни врати, включително с автоматизация (по запитване)",
+      "Решетки за прозорци и врати",
+      "Прахово боядисване по RAL"
+    ],
+    "en": [
+      "Solid fences from sheet steel",
+      "Open-pattern fences from metal profiles",
+      "Gates and garage doors, including automated versions (on request)",
+      "Window and door grilles",
+      "Powder coating in RAL colours"
+    ]
+  },
+  "applications": {
+    "bg": ["Къщи и жилищни сгради", "Търговски и производствени обекти"],
+    "en": ["Houses and residential buildings", "Commercial and industrial sites"]
+  },
+  "seoDescription": {
+    "bg": "Метални огради, порти, гаражни врати и решетки — изработка, прахово боядисване и монтаж.",
+    "en": "Metal fences, gates, garage doors and grilles — fabrication, powder coating and installation."
+  }
+}

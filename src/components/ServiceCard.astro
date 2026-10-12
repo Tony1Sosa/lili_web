@@ -1,0 +1,107 @@
+---
+import type { Lang } from '../i18n/ui';
+import { localePath } from '../i18n/utils';
+import { url } from '../lib/url';
+import type { Service } from '../lib/content';
+import Icon from './Icon.astro';
+
+interface Props {
+  service: Service;
+  lang: Lang;
+  index?: number;
+  headingLevel?: 'h2' | 'h3';
+}
+
+const { service, lang, index, headingLevel: Heading = 'h3' } = Astro.props;
+const href = url(localePath(lang, `products/${service.id}`));
+---
+
+<article class="service-card">
+  <div class="service-card__top">
+    <span class="service-card__icon"><Icon name={service.data.icon} size={28} strokeWidth={1.5} /></span>
+    {index !== undefined && <span class="service-card__num mono" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>}
+  </div>
+  <Heading class="service-card__title"><a href={href}>{service.data.title[lang]}</a></Heading>
+  <p>{service.data.summary[lang]}</p>
+  <span class="service-card__arrow" aria-hidden="true"><Icon name="arrow-right" size={20} /></span>
+</article>
+
+<style>
+  .service-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-5);
+    background: var(--c-white);
+    border: 1px solid var(--c-line);
+    border-radius: var(--radius);
+    transition: border-color 0.25s var(--ease), box-shadow 0.25s var(--ease), transform 0.25s var(--ease);
+  }
+
+  .service-card:hover {
+    border-color: var(--c-ink);
+    box-shadow: var(--shadow-1);
+  }
+
+  .service-card:focus-within {
+    box-shadow: var(--focus);
+  }
+
+  .service-card__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-5);
+  }
+
+  .service-card__icon {
+    display: grid;
+    place-items: center;
+    width: 3.25rem;
+    height: 3.25rem;
+    border-radius: var(--radius);
+    background: var(--c-ink);
+    color: var(--c-accent);
+  }
+
+  .service-card__num {
+    font-size: var(--fs-xs);
+    color: var(--c-muted);
+  }
+
+  .service-card__title {
+    margin-bottom: var(--space-2);
+    font-size: var(--fs-h4);
+  }
+
+  .service-card__title a {
+    color: var(--c-ink);
+    text-decoration: none;
+  }
+
+  .service-card__title a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  .service-card__title a:focus-visible {
+    box-shadow: none;
+  }
+
+  .service-card p {
+    margin-bottom: var(--space-5);
+    color: var(--c-muted);
+    font-size: var(--fs-sm);
+  }
+
+  .service-card__arrow {
+    margin-top: auto;
+    color: var(--c-accent-ink);
+    transition: transform 0.25s var(--ease);
+  }
+
+  .service-card:hover .service-card__arrow {
+    transform: translateX(4px);
+  }
+</style>

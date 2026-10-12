@@ -1,0 +1,66 @@
+---
+import { LANGS, langMeta, type Lang } from '../i18n/ui';
+import { translatePath } from '../i18n/utils';
+import { absoluteUrl, url } from '../lib/url';
+import { ALLOW_INDEXING } from '../data/site';
+
+interface Props {
+  lang: Lang;
+  title: string;
+  description: string;
+  /** Site-relative path of this page without the base, e.g. "/bg/about/". */
+  path: string;
+  /** Open Graph image (absolute URL or path inside /public). */
+  image?: string;
+  imageAlt?: string;
+  type?: 'website' | 'article';
+  noindex?: boolean;
+  /** Set false for pages that exist in one language only (e.g. 404). */
+  alternates?: boolean;
+  jsonLd?: object[];
+}
+
+const {
+  lang,
+  title,
+  description,
+  path,
+  image = 'og-default.png',
+  imageAlt,
+  type = 'website',
+  noindex = false,
+  alternates = true,
+  jsonLd = [],
+} = Astro.props;
+
+const site = Astro.site;
+const canonical = absoluteUrl(path, site);
+const ogImage = /^https?:\/\//.test(image) ? image : absoluteUrl(image, site);
+const robots = !ALLOW_INDEXING || noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large';
+const meta = langMeta[lang];
+---
+
+<title>{title}</title>
+<meta name="description" content={description} />
+<meta name="robots" content={robots} />
+<link rel="canonical" href={canonical} />
+{
+  alternates &&
+    LANGS.map((l) => <link rel="alternate" hreflang={langMeta[l].htmlLang} href={absoluteUrl(translatePath(path, l), site)} />)
+}
+{alternates && <link rel="alternate" hreflang="x-default" href={absoluteUrl('/', site)} />}
+
+<meta property="og:type" content={type} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={ogImage} />
+{imageAlt && <meta property="og:image:alt" content={imageAlt} />}
+<meta property="og:locale" content={meta.ogLocale} />
+{LANGS.filter((l) => l !== lang).map((l) => <meta property="og:locale:alternate" content={langMeta[l].ogLocale} />)}
+<meta name="twitter:card" content="summary_large_image" />
+
+<link rel="icon" href={url('favicon.svg')} type="image/svg+xml" />
+<link rel="sitemap" href={url('sitemap-index.xml')} />
+
+{jsonLd.map((data) => <script type="application/ld+json" set:html={JSON.stringify(data).replace(/</g, '\\u003c')} />)}

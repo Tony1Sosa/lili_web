@@ -1,0 +1,316 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import Icon from '../../components/Icon.astro';
+import type { IconName } from '../../components/icons';
+import type { Lang } from '../../i18n/ui';
+import { langPaths, localePath, useTranslations } from '../../i18n/utils';
+import { url } from '../../lib/url';
+import { company } from '../../data/company';
+import { breadcrumbJsonLd } from '../../lib/seo';
+
+export const getStaticPaths = langPaths;
+
+const lang = Astro.params.lang as Lang;
+const t = useTranslations(lang);
+
+interface Equipment {
+  icon: IconName;
+  name: string;
+  spec: string;
+  text: string;
+}
+
+const copy = {
+  bg: {
+    description:
+      'Производствена база в София: плазмено рязане, абкант до 3100 мм, MIG/MAG заваряване с двоен пулс, шлайфане на инокс, стругови и фрезови услуги, прахово боядисване до 7500 мм.',
+    lead: 'Собствена производствена база в София с оборудване за рязане, огъване, заваряване, повърхностна обработка и прахово боядисване. Затова контролираме всеки етап — от суровината до готовото изделие.',
+    equipmentTitle: 'Оборудване',
+    equipmentText: 'С какво разполагаме в цеха.',
+    equipment: [
+      { icon: 'cut', name: 'Плазмено рязане', spec: 'листов метал', text: 'Машина за плазмено рязане за разкрой на детайли от листов метал.' },
+      { icon: 'bend', name: 'Абкант', spec: 'дължина на огъване до 3100 мм', text: 'Огъване на ламарина и профили с прецизни ъгли.' },
+      { icon: 'weld', name: 'MIG/MAG заваряване', spec: 'двоен пулс · водно охлаждане', text: 'Заваръчен апарат с функция „двоен пулс“ и водно охлаждане, с отделно телоподаване за оптимално заваряване на алуминий.' },
+      { icon: 'grind', name: 'Обработка на инокс', spec: 'шлайфане', text: 'Машина за повърхностна обработка (шлайфане) на неръждаема стомана.' },
+      { icon: 'mill', name: 'Струг и фреза', spec: 'механична обработка', text: 'Стругови и фрезови услуги за изработка на детайли.' },
+      { icon: 'powder', name: 'Прахово боядисване', spec: 'до 7500 мм · RAL', text: 'Прахово боядисване на детайли с дължина до 7500 мм в широка гама цветове по каталог RAL.' },
+    ] as Equipment[],
+    processTitle: 'Производственият процес',
+    process: [
+      ['Проект и чертеж', 'Уточняваме размерите, материалите и покритието; изготвяме или приемаме чертеж.'],
+      ['Рязане', 'Разкрой на ламарина, тръби и профили.'],
+      ['Огъване и механична обработка', 'Абкант, струг и фреза според детайла.'],
+      ['Заваряване', 'MIG/MAG заваряване на стомана, неръждаема стомана и алуминий.'],
+      ['Повърхностна обработка', 'Шлайфане на инокс или прахово боядисване по RAL.'],
+      ['Монтаж', 'Доставка и монтаж на обекта.'],
+    ],
+    certTitle: 'Сертифициране',
+    certText: [
+      'Фирмата е сертифицирана по EN 1090-1 и EN 1090-2.',
+      'EN 1090-1 определя изискванията за оценяване на съответствието на стоманени и алуминиеви конструктивни елементи, а EN 1090-2 — техническите изисквания за изпълнение на стоманени конструкции.',
+    ],
+    certPending: 'За подробности относно сертификата — номер, издаващ орган и валидност — моля, свържете се с нас.',
+    materialsTitle: 'Материали, с които работим',
+    materials: ['Неръждаема стомана (инокс)', 'Черен метал', 'Алуминий', 'Стъкло', 'Поликарбонат', 'Дърво (ръкохвати, стъпала)'],
+  },
+  en: {
+    description:
+      'Workshop in Sofia: plasma cutting, press brake up to 3100 mm, double-pulse MIG/MAG welding, stainless steel finishing, turning and milling, powder coating up to 7500 mm.',
+    lead: 'Our own workshop in Sofia with equipment for cutting, bending, welding, surface finishing and powder coating. This lets us control every stage — from raw material to finished product.',
+    equipmentTitle: 'Equipment',
+    equipmentText: 'What we have in the workshop.',
+    equipment: [
+      { icon: 'cut', name: 'Plasma cutting', spec: 'sheet metal', text: 'Plasma cutting machine for cutting parts from sheet metal.' },
+      { icon: 'bend', name: 'Press brake', spec: 'bending length up to 3100 mm', text: 'Bending of sheet metal and profiles to accurate angles.' },
+      { icon: 'weld', name: 'MIG/MAG welding', spec: 'double pulse · water-cooled', text: 'Welding machine with double-pulse function and water cooling, with a separate wire feeder for optimal welding of aluminium.' },
+      { icon: 'grind', name: 'Stainless steel finishing', spec: 'grinding', text: 'Machine for surface finishing (grinding) of stainless steel.' },
+      { icon: 'mill', name: 'Turning & milling', spec: 'machining', text: 'Turning and milling services for machined parts.' },
+      { icon: 'powder', name: 'Powder coating', spec: 'up to 7500 mm · RAL', text: 'Powder coating of parts up to 7500 mm long in a wide range of RAL catalogue colours.' },
+    ] as Equipment[],
+    processTitle: 'The production process',
+    process: [
+      ['Design & drawings', 'We agree dimensions, materials and finish; we prepare or work from your drawings.'],
+      ['Cutting', 'Cutting of sheet metal, tubes and profiles.'],
+      ['Bending & machining', 'Press brake, turning and milling as the part requires.'],
+      ['Welding', 'MIG/MAG welding of steel, stainless steel and aluminium.'],
+      ['Surface finishing', 'Grinding of stainless steel or powder coating in RAL colours.'],
+      ['Installation', 'Delivery and installation on site.'],
+    ],
+    certTitle: 'Certification',
+    certText: [
+      'The company is certified to EN 1090-1 and EN 1090-2.',
+      'EN 1090-1 sets the requirements for conformity assessment of steel and aluminium structural components; EN 1090-2 sets the technical requirements for the execution of steel structures.',
+    ],
+    certPending: 'For certificate details — number, issuing body and validity — please contact us.',
+    materialsTitle: 'Materials we work with',
+    materials: ['Stainless steel (inox)', 'Black steel', 'Aluminium', 'Glass', 'Polycarbonate', 'Timber (handrails, treads)'],
+  },
+}[lang];
+
+const title = t('nav.manufacturing');
+const jsonLd = [breadcrumbJsonLd(lang, [], { label: title, href: localePath(lang, 'manufacturing') }, Astro.site)];
+---
+
+<BaseLayout lang={lang} title={title} description={copy.description} jsonLd={jsonLd}>
+  <PageHeader lang={lang} title={title} lead={copy.lead} />
+
+  <section class="section" aria-labelledby="equipment-title">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <h2 id="equipment-title">{copy.equipmentTitle}</h2>
+          <p>{copy.equipmentText}</p>
+        </div>
+      </div>
+      <ul class="equipment grid grid--3">
+        {
+          copy.equipment.map((e) => (
+            <li data-reveal>
+              <span class="equipment__icon">
+                <Icon name={e.icon} size={28} strokeWidth={1.5} />
+              </span>
+              <h3>{e.name}</h3>
+              <p class="equipment__spec mono">{e.spec}</p>
+              <p>{e.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--dark" aria-labelledby="process-title">
+    <div class="container">
+      <h2 id="process-title">{copy.processTitle}</h2>
+      <ol class="flow">
+        {
+          copy.process.map(([name, text], i) => (
+            <li data-reveal>
+              <span class="flow__num mono">{String(i + 1).padStart(2, '0')}</span>
+              <h3>{name}</h3>
+              <p>{text}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="cert-title">
+    <div class="container cert">
+      <div class="cert__badge" aria-hidden="true">
+        <Icon name="shield" size={56} strokeWidth={1.25} />
+        <span class="mono">{company.certification.label}</span>
+      </div>
+      <div class="prose">
+        <h2 id="cert-title">{copy.certTitle}</h2>
+        {copy.certText.map((p) => <p>{p}</p>)}
+        {!company.certification.verified && <p class="cert__note">{copy.certPending}</p>}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--white section--line" aria-labelledby="materials-title">
+    <div class="container">
+      <h2 id="materials-title">{copy.materialsTitle}</h2>
+      <ul class="materials">
+        {copy.materials.map((m) => <li>{m}</li>)}
+      </ul>
+      <p>
+        <a class="link-arrow" href={url(localePath(lang, 'products'))}>
+          {t('cta.allServices')}
+          <Icon name="arrow-right" />
+        </a>
+      </p>
+    </div>
+  </section>
+
+  <CtaBand lang={lang} />
+</BaseLayout>
+
+<style>
+  .equipment {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .equipment li {
+    padding: var(--space-6);
+    background: var(--c-white);
+    border: 1px solid var(--c-line);
+    border-radius: var(--radius);
+  }
+
+  .equipment__icon {
+    display: grid;
+    place-items: center;
+    width: 3.5rem;
+    height: 3.5rem;
+    margin-bottom: var(--space-5);
+    border-radius: var(--radius);
+    background: var(--c-ink);
+    color: var(--c-accent);
+  }
+
+  .equipment h3 {
+    margin-bottom: var(--space-2);
+    font-size: var(--fs-h4);
+  }
+
+  .equipment__spec {
+    display: inline-block;
+    margin-bottom: var(--space-3);
+    padding: 0.2rem 0.5rem;
+    background: var(--c-paper);
+    border: 1px solid var(--c-line-2);
+    border-radius: 2px;
+    font-size: var(--fs-xs);
+    color: var(--c-ink);
+  }
+
+  .equipment li p:last-child {
+    margin: 0;
+    color: var(--c-muted);
+    font-size: var(--fs-sm);
+  }
+
+  .flow {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
+    gap: var(--space-5);
+    margin: var(--space-7) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .flow li {
+    position: relative;
+    padding-top: var(--space-5);
+    border-top: 2px solid var(--c-ink-3);
+  }
+
+  .flow li::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: 0;
+    width: 2.5rem;
+    height: 2px;
+    background: var(--c-accent);
+  }
+
+  .flow__num {
+    font-size: var(--fs-xs);
+    color: var(--c-accent);
+  }
+
+  .flow h3 {
+    margin: var(--space-2) 0;
+    font-size: var(--fs-base);
+  }
+
+  .flow p {
+    margin: 0;
+    font-size: var(--fs-sm);
+    color: var(--c-steel);
+  }
+
+  .cert {
+    display: grid;
+    gap: var(--space-7);
+    align-items: start;
+  }
+
+  @media (min-width: 48em) {
+    .cert {
+      grid-template-columns: 16rem minmax(0, 1fr);
+    }
+  }
+
+  .cert__badge {
+    display: grid;
+    place-items: center;
+    gap: var(--space-4);
+    aspect-ratio: 1;
+    max-width: 16rem;
+    padding: var(--space-6);
+    border: 1px solid var(--c-line-2);
+    border-radius: var(--radius-lg);
+    background: var(--c-white);
+    color: var(--c-ink);
+    text-align: center;
+    font-size: var(--fs-sm);
+  }
+
+  .cert__badge :global(svg) {
+    color: var(--c-accent-ink);
+  }
+
+  .cert__note {
+    padding-left: var(--space-4);
+    border-left: 3px solid var(--c-accent);
+    color: var(--c-muted);
+    font-size: var(--fs-sm);
+  }
+
+  .materials {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin: var(--space-5) 0 var(--space-6);
+    padding: 0;
+    list-style: none;
+  }
+
+  .materials li {
+    padding: 0.5rem 0.9rem;
+    border: 1px solid var(--c-line-2);
+    border-radius: 2px;
+    background: var(--c-paper);
+    font-weight: 600;
+    font-size: var(--fs-sm);
+  }
+</style>

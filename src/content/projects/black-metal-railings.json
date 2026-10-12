@@ -1,0 +1,21 @@
+{
+  "status": "published",
+  "order": 30,
+  "featured": false,
+  "category": "railings",
+  "services": ["railings", "powder-coating"],
+  "title": { "bg": "Парапети от черен метал", "en": "Black-steel railings" },
+  "summary": {
+    "bg": "Подбрани изпълнени парапети от черен метал.",
+    "en": "A selection of completed black-steel railings."
+  },
+  "description": {
+    "bg": "Парапетите от черен метал се боядисват. При външен монтаж препоръчваме горещо поцинковане за по-дълготрайна защита от корозия.",
+    "en": "Black-steel railings are painted. For outdoor installation we recommend hot-dip galvanising for longer-lasting corrosion protection."
+  },
+  "materials": { "bg": ["Черен метал"], "en": ["Black steel"] },
+  "legacy": {
+    "urls": ["/portfolio/steel-railings/", "/portfolio/black-metal-railings/?lang=en"],
+    "images": ["2019/01/0-02-04-b92a2aed04d6bd6bb2b469bde666194a96cbe9b1c52e468e352083262770cd4f_95e58f84-1.jpg"]
+  }
+}
